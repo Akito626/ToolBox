@@ -29,17 +29,20 @@
 
         <activity
             android:name="com.alha_app.toolbox.CalcActivity"
-            android:label="@string/calcactivity_title" >
+            android:label="@string/calcactivity_title"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.alha_app.toolbox.CounterActivity"
-            android:label="@string/counteractivity_title" >
+            android:label="@string/counteractivity_title"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.alha_app.toolbox.StopwatchActivity"
-            android:label="@string/counteractivity_title" >
+            android:label="@string/stopwatchactivity_title"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>
