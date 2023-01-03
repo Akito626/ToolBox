@@ -2,6 +2,8 @@
     <string name="app_name">ToolBox</string>
 
     <string name="calcactivity_title">電卓</string>
+    <string name="counteractivity_title">カウンター</string>
+    <string name="stopwatchactivity_title">ストップウォッチ</string>
 
     <string-array name="tools">
         <item>電卓</item>

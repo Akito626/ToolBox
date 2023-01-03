@@ -47,9 +47,18 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent;
                 switch (position){
                     case 0:
-                        Intent intent = new Intent(getApplication(), CalcActivity.class);
+                        intent = new Intent(getApplication(), CalcActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        intent = new Intent(getApplication(), CounterActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent = new Intent(getApplication(), StopwatchActivity.class);
                         startActivity(intent);
                         break;
                 }
