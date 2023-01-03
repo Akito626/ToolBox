@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         String [] tools = getResources().getStringArray(R.array.tools);
-        int [] images = {R.drawable.calculator};
+        int [] images = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch};
 
         ArrayList<Map<String, Object>> listData = new ArrayList<>();
         for (int i=0; i < tools.length; i++) {

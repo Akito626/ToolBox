@@ -5,6 +5,8 @@
 
     <string-array name="tools">
         <item>電卓</item>
+        <item>カウンター</item>
+        <item>ストップウォッチ</item>
     </string-array>
 
     <string name="calc_0">0</string>
