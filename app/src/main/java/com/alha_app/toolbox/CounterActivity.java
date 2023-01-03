@@ -69,7 +69,7 @@ public class CounterActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        countText.setTextSize(countText.getHeight()/4);
+        countText.setTextSize(countText.getWidth()/7);
     }
 
     @Override

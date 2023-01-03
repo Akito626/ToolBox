@@ -49,7 +49,7 @@ public class CalcActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Button btn = (Button) v;
-                String str = "";
+                String str = "";        // ボタンのテキスト用
                 String text = textView.getText().toString();
 
                 str = ((Button) v).getText().toString();
@@ -63,6 +63,9 @@ public class CalcActivity extends AppCompatActivity {
                     if(prev.equals(0)){
                         text = text.substring(0, text.length()-1);
                         text = text + str;
+                        textView.setText(text);
+                    } else if(prev.equals(")")){
+                        text = text + "×" + str;
                         textView.setText(text);
                     } else {
                         text = text + str;
