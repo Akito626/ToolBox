@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.12"
+        android:gravity="right"
+        android:textColor="@color/black"
+        android:autoSizeTextType="uniform"/>
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.08"
+        android:gravity="right"
+        android:textColor="#CCCCCC"
+        android:autoSizeTextType="uniform"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:gravity="fill">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_ac"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonAC" />
+
+            <Button
+                android:id="@+id/buttonparentheses"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/black"
+                android:text="@string/calc_parentheses" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_percent"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonPercent"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_clear"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonClear"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_7"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button7" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_8"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button8" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_9"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button9" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_div"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonDiv" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_4"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button4" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_5"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button5" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_6"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button6" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_mul"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonMul" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_1"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button1" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_2"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button2" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_3"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button3" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_minus"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonMinus" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_0"
+                android:backgroundTint="@color/black"
+                android:id="@+id/button0" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_period"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonPeriod" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_eq"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonEq" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="@string/calc_plus"
+                android:backgroundTint="@color/black"
+                android:id="@+id/buttonPlus" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+    </LinearLayout>
+
+</LinearLayout>
