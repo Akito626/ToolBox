@@ -32,6 +32,16 @@
             android:label="@string/calcactivity_title" >
         </activity>
 
+        <activity
+            android:name="com.alha_app.toolbox.CounterActivity"
+            android:label="@string/counteractivity_title" >
+        </activity>
+
+        <activity
+            android:name="com.alha_app.toolbox.StopwatchActivity"
+            android:label="@string/counteractivity_title" >
+        </activity>
+
     </application>
 
 </manifest>
