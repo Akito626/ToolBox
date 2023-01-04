@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"/>
+
     <application
+        android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -54,6 +61,12 @@
         <activity
             android:name="com.alha_app.toolbox.ClockMenuActivity"
             android:label="@string/clockmenu_title"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.alha_app.toolbox.QRScannerActivity"
+            android:label="@string/qrscanner_title"
             android:screenOrientation="portrait">
         </activity>
 
