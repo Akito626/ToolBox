@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/mainlayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.35"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/maincountry"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"/>
+
+        <TextView
+            android:id="@+id/mainclock"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"/>
+
+        <TextView
+            android:id="@+id/maindate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/sublayout1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:background="@drawable/border">
+
+            <TextView
+                android:id="@+id/subcountry1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subclock1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subdate1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sublayout2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:background="@drawable/border">
+
+            <TextView
+                android:id="@+id/subcountry2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subclock2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subdate2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/sublayout3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:background="@drawable/border">
+
+            <TextView
+                android:id="@+id/subcountry3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subclock3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subdate3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sublayout4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:background="@drawable/border">
+
+            <TextView
+                android:id="@+id/subcountry4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subclock4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+
+            <TextView
+                android:id="@+id/subdate4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+    </LinearLayout>
+
+</LinearLayout>

@@ -16,14 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         String [] tools = getResources().getStringArray(R.array.tools);
-        int [] images = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch};
+        int [] images = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.clock};
 
         ArrayList<Map<String, Object>> listData = new ArrayList<>();
         for (int i=0; i < tools.length; i++) {
@@ -59,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         intent = new Intent(getApplication(), StopwatchActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 3:
+                        intent = new Intent(getApplication(), ClockActivity.class);
                         startActivity(intent);
                         break;
                 }

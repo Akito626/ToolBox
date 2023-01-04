@@ -4,11 +4,14 @@
     <string name="calcactivity_title">電卓</string>
     <string name="counteractivity_title">カウンター</string>
     <string name="stopwatchactivity_title">ストップウォッチ</string>
+    <string name="clockactivity_title">時計</string>
+    <string name="clockmenu_title">タイムゾーン</string>
 
     <string-array name="tools">
         <item>電卓</item>
         <item>カウンター</item>
         <item>ストップウォッチ</item>
+        <item>時計</item>
     </string-array>
 
     <string name="calc_0">0</string>
@@ -31,4 +34,15 @@
     <string name="calc_parentheses">( )</string>
     <string name="calc_period">.</string>
     <string name="calc_percent">%</string>
+
+    <string-array name="timezone">
+        <item>Etc/GMT+12</item>
+        <item>Etc/GMT+11</item>
+    </string-array>
+
+    <string-array name="timezonename">
+        <item>国際日付変更線 西側</item>
+        <item>協定世界時-11</item>
+        <item>ハワイ</item>
+    </string-array>
 </resources>
