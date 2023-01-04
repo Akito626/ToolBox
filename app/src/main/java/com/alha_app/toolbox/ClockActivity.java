@@ -35,6 +35,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,7 +47,9 @@ public class ClockActivity extends AppCompatActivity {
     private Timer timer;
 
     private final String mFileName = "MyTimeZone.txt";
+    private final String [] defaultZone = {"Asia/Tokyo", "Asia/Seoul", "Asia/Shanghai", "America/New_York", "Europe/London"};
     private String [] myTimeZones = {"Asia/Tokyo", "Asia/Seoul", "Asia/Shanghai", "America/New_York", "Europe/London"};
+    private String [] timeZoneNames = new String[5];
 
     private int id;
 
@@ -98,7 +101,6 @@ public class ClockActivity extends AppCompatActivity {
                 LinearLayout layout = (LinearLayout) v;
                 id = layout.getId();
 
-
                 Intent intent = new Intent(getApplication(), ClockMenuActivity.class);
                 intent.putExtra("ID", id);
                 startActivity(intent);
@@ -111,6 +113,7 @@ public class ClockActivity extends AppCompatActivity {
             clocklayouts[i].setOnTouchListener(clocktouchListener);
         }
 
+        resetZone();
         createTimer();
     }
 
@@ -163,14 +166,14 @@ public class ClockActivity extends AppCompatActivity {
                 DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
                 for(int i = 0; i < 5; i++) {
-                    ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
-                    countryViews[i].setText(myTimeZones[i]);
+                    ZonedDateTime time = ZonedDateTime.now(ZoneId.of(myTimeZones[i]));
+                    countryViews[i].setText(timeZoneNames[i]);
                     clockViews[i].setText(time.format(timeformatter));
                     dateViews[i].setText(time.format(dateformatter));
                 }
             }
         };
-        timer.schedule(timerTask, 0, 1000);
+        timer.schedule(timerTask, 0, 100);
     }
 
     public void saveTimeZone(){
@@ -182,6 +185,7 @@ public class ClockActivity extends AppCompatActivity {
             writer = new PrintWriter(new OutputStreamWriter(out,"UTF-8"));
             // タイトル書き込み
             for(int i = 0; i < 5; i++) {
+                writer.println(timeZoneNames[i]);
                 writer.println(myTimeZones[i]);
             }
             writer.close();
@@ -218,6 +222,8 @@ public class ClockActivity extends AppCompatActivity {
                 String str;
                 for (int i = 0; i < 5; i++) {
                     if ((str = reader.readLine()) == null) break;
+                    timeZoneNames[i] = str;
+                    if ((str = reader.readLine()) == null) break;
                     myTimeZones[i] = str;
                 }
 
@@ -229,10 +235,10 @@ public class ClockActivity extends AppCompatActivity {
         }
     }
     public void resetZone(){
-        myTimeZones[0] = "Asia/Tokyo";
-        myTimeZones[1] = "Asia/Seoul";
-        myTimeZones[2] = "Asia/Shanghai";
-        myTimeZones[3] = "America/New_York";
-        myTimeZones[4] = "Europe/London";
+        for(int i = 0; i < 5; i++) {
+            TimeZone tz = TimeZone.getTimeZone(defaultZone[i]);
+            timeZoneNames[i] = tz.getDisplayName();
+            myTimeZones[i] = tz.getID();
+        }
     }
 }

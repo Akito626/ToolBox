@@ -34,6 +34,7 @@ public class ClockMenuActivity extends AppCompatActivity {
     private int id;
     private final String mFileName = "MyTimeZone.txt";
     private String[] myTimeZones = new String[5];
+    private String[] timeZoneName = new String[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +80,17 @@ public class ClockMenuActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String message = adapter.getItem(i).toString();
-                message = message.replaceAll("[^a-z A-Z /]", "");
-                message = message.replaceAll("timezone", "");
-                int index = message.indexOf("name");
-                message = message.substring(0, index);
+                String tzid = listData.get(i).get("timezone");
+                String tzname = listData.get(i).get("name");
 
-                myTimeZones[id] = message;
+                myTimeZones[id] = tzid;
+                timeZoneName[id] = tzname;
                 changeZoneId();
                 finish();
             }
         });
 
+        /*
         // テキストフィルターを有効にする
         list.setTextFilterEnabled(true);
         SearchView searchView = findViewById(R.id.search);
@@ -115,6 +115,7 @@ public class ClockMenuActivity extends AppCompatActivity {
                     }
                 }
         );
+        */
 
         loadZoneId();
     }
@@ -146,6 +147,7 @@ public class ClockMenuActivity extends AppCompatActivity {
             writer = new PrintWriter(new OutputStreamWriter(out,"UTF-8"));
             // タイトル書き込み
             for(int i = 0; i < 5; i++) {
+                writer.println(timeZoneName[i]);
                 writer.println(myTimeZones[i]);
             }
             writer.close();
@@ -181,6 +183,8 @@ public class ClockMenuActivity extends AppCompatActivity {
 
                 String str;
                 for (int i = 0; i < 5; i++) {
+                    if ((str = reader.readLine()) == null) break;
+                    timeZoneName[i] = str;
                     if ((str = reader.readLine()) == null) break;
                     myTimeZones[i] = str;
                 }
