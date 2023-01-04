@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,7 +47,6 @@ public class ClockActivity extends AppCompatActivity {
 
     private final String mFileName = "MyTimeZone.txt";
     private String [] myTimeZones = {"Asia/Tokyo", "Asia/Seoul", "Asia/Shanghai", "America/New_York", "Europe/London"};
-    //private String [] mtzName = {"東京/日本", "ソウル/大韓民国", "上海/中国", "ニューヨーク/アメリカ", "ロンドン/イギリス"};
 
     private int id;
 
@@ -127,6 +127,13 @@ public class ClockActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // オプションメニューを作成する
+        getMenuInflater().inflate(R.menu.menu_clock,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuButton){
         boolean result = true;
         int buttonId = menuButton.getItemId();
@@ -135,6 +142,9 @@ public class ClockActivity extends AppCompatActivity {
             case android.R.id.home:
                 //画面を終了させる
                 finish();
+                break;
+            case R.id.action_reset:
+                resetZone();
                 break;
             //それ以外の時
             default:
@@ -217,5 +227,12 @@ public class ClockActivity extends AppCompatActivity {
                 Toast.makeText(this, "File read error!", Toast.LENGTH_LONG).show();
             }
         }
+    }
+    public void resetZone(){
+        myTimeZones[0] = "Asia/Tokyo";
+        myTimeZones[1] = "Asia/Seoul";
+        myTimeZones[2] = "Asia/Shanghai";
+        myTimeZones[3] = "America/New_York";
+        myTimeZones[4] = "Europe/London";
     }
 }
