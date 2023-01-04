@@ -16,6 +16,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -27,7 +32,7 @@ import java.util.TimeZone;
 
 public class ClockMenuActivity extends AppCompatActivity {
     private int id;
-    private String mFileName;
+    private final String mFileName = "MyTimeZone.txt";
     private String[] myTimeZones = new String[5];
 
     @Override
@@ -37,6 +42,9 @@ public class ClockMenuActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        id = intent.getIntExtra("ID", 0);
 
         ArrayList<String> timezone = new ArrayList<String>();
         ArrayList<String> timezonename = new ArrayList<String>();
@@ -77,7 +85,8 @@ public class ClockMenuActivity extends AppCompatActivity {
                 int index = message.indexOf("name");
                 message = message.substring(0, index);
 
-
+                myTimeZones[id] = message;
+                changeZoneId();
                 finish();
             }
         });
@@ -106,6 +115,8 @@ public class ClockMenuActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        loadZoneId();
     }
 
     @Override
@@ -124,5 +135,61 @@ public class ClockMenuActivity extends AppCompatActivity {
                 break;
         }
         return result;
+    }
+
+    public void changeZoneId(){
+        // 保存
+        OutputStream out = null;
+        PrintWriter writer = null;
+        try{
+            out = this.openFileOutput(mFileName, Context.MODE_PRIVATE);
+            writer = new PrintWriter(new OutputStreamWriter(out,"UTF-8"));
+            // タイトル書き込み
+            for(int i = 0; i < 5; i++) {
+                writer.println(myTimeZones[i]);
+            }
+            writer.close();
+            out.close();
+        }catch(Exception e){
+            Toast.makeText(this, "File save error!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void loadZoneId(){
+        FilenameFilter filter = new FilenameFilter(){
+            public boolean accept(File file, String str){
+                //指定文字列でフィルタする
+                if(str.indexOf("MyTimeZone.txt") != -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+
+        // アプリの保存フォルダ内のファイル一覧を取得
+        String savePath = this.getFilesDir().getPath().toString();
+        File[] files = new File(savePath).listFiles(filter);
+
+        if(files.length != 0) {
+            String fileName = files[0].getName();
+            //　ファイルを読み込み
+            try {
+                // ファイルオープン
+                InputStream in = this.openFileInput(fileName);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+                String str;
+                for (int i = 0; i < 5; i++) {
+                    if ((str = reader.readLine()) == null) break;
+                    myTimeZones[i] = str;
+                }
+
+                reader.close();
+                in.close();
+            } catch (Exception e) {
+                Toast.makeText(this, "File read error!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

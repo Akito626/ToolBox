@@ -98,7 +98,9 @@ public class ClockActivity extends AppCompatActivity {
                 LinearLayout layout = (LinearLayout) v;
                 id = layout.getId();
 
+
                 Intent intent = new Intent(getApplication(), ClockMenuActivity.class);
+                intent.putExtra("ID", id);
                 startActivity(intent);
 
                 return false;
@@ -150,9 +152,8 @@ public class ClockActivity extends AppCompatActivity {
                 DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy:MM:dd");
                 DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-                for(int i = 0; i < 5; i++){
-                    ZonedDateTime time = ZonedDateTime.now(ZoneId.of(myTimeZones[i]));
-
+                for(int i = 0; i < 5; i++) {
+                    ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
                     countryViews[i].setText(myTimeZones[i]);
                     clockViews[i].setText(time.format(timeformatter));
                     dateViews[i].setText(time.format(dateformatter));
