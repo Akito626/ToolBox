@@ -1,8 +1,12 @@
 package com.alha_app.toolbox;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,13 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int PERMISSION_WRITE_EX_STR = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         String [] tools = getResources().getStringArray(R.array.tools);
-        int [] images = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.clock};
+        int [] images = {
+                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.clock,
+                R.drawable.ic_baseline_qr_code_scanner_24};
 
         ArrayList<Map<String, Object>> listData = new ArrayList<>();
         for (int i=0; i < tools.length; i++) {
@@ -62,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         intent = new Intent(getApplication(), ClockActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 4:
+                        intent = new Intent(getApplication(), QRScannerActivity.class);
                         startActivity(intent);
                         break;
                 }
