@@ -80,8 +80,15 @@ public class ClockMenuActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String tzid = listData.get(i).get("timezone");
-                String tzname = listData.get(i).get("name");
+                String tzid = adapter.getItem(i).toString();
+                String tzname = adapter.getItem(i).toString();
+
+                int beginindex = tzid.indexOf("=");
+                int endindex = tzid.indexOf(",");
+                tzid = tzid.substring(beginindex+1, endindex);
+                beginindex = tzname.lastIndexOf("=");
+                endindex = tzname.indexOf("}");
+                tzname = tzname.substring(beginindex+1, endindex);
 
                 myTimeZones[id] = tzid;
                 timeZoneName[id] = tzname;
@@ -90,7 +97,6 @@ public class ClockMenuActivity extends AppCompatActivity {
             }
         });
 
-        /*
         // テキストフィルターを有効にする
         list.setTextFilterEnabled(true);
         SearchView searchView = findViewById(R.id.search);
@@ -115,7 +121,6 @@ public class ClockMenuActivity extends AppCompatActivity {
                     }
                 }
         );
-        */
 
         loadZoneId();
     }
