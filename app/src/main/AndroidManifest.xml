@@ -45,6 +45,18 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name="com.alha_app.toolbox.ClockActivity"
+            android:label="@string/clockactivity_title"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.alha_app.toolbox.ClockMenuActivity"
+            android:label="@string/clockmenu_title"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>
