@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         String [] tools = getResources().getStringArray(R.array.tools);
         int [] images = {
-                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.clock,
-                R.drawable.ic_baseline_qr_code_scanner_24};
+                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
+                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
 
         ArrayList<Map<String, Object>> listData = new ArrayList<>();
         for (int i=0; i < tools.length; i++) {
@@ -41,18 +41,20 @@ public class MainActivity extends AppCompatActivity {
 
         // ListViewにデータをセットする
         ListView list = findViewById(R.id.list);
-        list.setAdapter(new SimpleAdapter(
+        SimpleAdapter adapter = new SimpleAdapter(
                 this,
                 listData,
                 R.layout.list_item,
                 new String[] {"name", "image"},
                 new int[] {R.id.name, R.id.image}
-        ));
+        );
+        list.setAdapter(adapter);
 
         // クリックイベント
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //String appname = adapter.getItem(position).toString();
                 Intent intent;
                 switch (position){
                     case 0:
@@ -68,10 +70,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3:
-                        intent = new Intent(getApplication(), ClockActivity.class);
+                        intent = new Intent(getApplication(), TimerActivity.class);
                         startActivity(intent);
                         break;
                     case 4:
+                        intent = new Intent(getApplication(), ClockActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 5:
                         intent = new Intent(getApplication(), QRScannerActivity.class);
                         startActivity(intent);
                         break;

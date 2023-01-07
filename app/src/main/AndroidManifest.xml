@@ -53,6 +53,12 @@
         </activity>
 
         <activity
+            android:name="com.alha_app.toolbox.TimerActivity"
+            android:label="@string/timeractivity_title"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name="com.alha_app.toolbox.ClockActivity"
             android:label="@string/clockactivity_title"
             android:screenOrientation="portrait">
