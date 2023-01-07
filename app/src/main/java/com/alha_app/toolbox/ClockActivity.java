@@ -48,7 +48,7 @@ public class ClockActivity extends AppCompatActivity {
 
     private final String mFileName = "MyTimeZone.txt";
     private final String [] defaultZone = {"Asia/Tokyo", "Asia/Seoul", "Asia/Shanghai", "America/New_York", "Europe/London"};
-    private String [] myTimeZones = {"Asia/Tokyo", "Asia/Seoul", "Asia/Shanghai", "America/New_York", "Europe/London"};
+    private String [] myTimeZones = new String[5];
     private String [] timeZoneNames = new String[5];
 
     private int id;
@@ -162,7 +162,7 @@ public class ClockActivity extends AppCompatActivity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy:MM:dd");
+                DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
                 for(int i = 0; i < 5; i++) {
@@ -234,6 +234,7 @@ public class ClockActivity extends AppCompatActivity {
             }
         }
     }
+
     public void resetZone(){
         for(int i = 0; i < 5; i++) {
             TimeZone tz = TimeZone.getTimeZone(defaultZone[i]);

@@ -72,10 +72,13 @@ public class CalcActivity extends AppCompatActivity {
                         textView.setText(text);
                     }
                 } else if(str.matches("[+ \\- × ÷]")){
-                    if(prev.matches("[\\. (]") || prev.equals("")){
+                    if(str.equals("-") && prev.equals("(")){
+                        text = text + str;
+                        textView.setText(text);
+                    } else if(prev.matches("[\\. (]") || prev.equals("")){
                         Toast.makeText(CalcActivity.this, "無効な式です", Toast.LENGTH_SHORT).show();
-                    } else if(prev.matches("[+ \\- × ÷]")){
-                        text = text.substring(0, text.length()-1);
+                    } else if(prev.matches("[+ \\- × ÷]")) {
+                        text = text.substring(0, text.length() - 1);
                         text = text + str;
                         textView.setText(text);
                     } else {
@@ -153,7 +156,14 @@ public class CalcActivity extends AppCompatActivity {
                     }
                 } else if(str.equals("=")){
                     if(prev.matches("[0-9 ) %]")){
-                        textView.setText(calc(text));
+                        text = calc(text);
+                        textView.setText(text);
+                        lpcount = 0;
+                        if(text.indexOf(".") != -1){
+                            isdecimal = true;
+                        } else {
+                            isdecimal = false;
+                        }
                     }else {
                         Toast.makeText(CalcActivity.this, "無効な式です", Toast.LENGTH_SHORT).show();
                     }
