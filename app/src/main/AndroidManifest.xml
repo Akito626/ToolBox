@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -55,6 +56,12 @@
         <activity
             android:name="com.alha_app.toolbox.TimerActivity"
             android:label="@string/timeractivity_title"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.alha_app.toolbox.MusicListActivity"
+            android:label="@string/musiclistactivity_title"
             android:screenOrientation="portrait">
         </activity>
 

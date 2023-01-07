@@ -100,7 +100,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"/>
+        android:layout_weight="0.1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -108,6 +108,7 @@
         android:layout_weight="0.05">
 
         <TextView
+            android:id="@+id/musictext"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_gravity="center"
@@ -124,7 +125,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1">
+        android:layout_weight="0.05">
 
         <Space
             android:layout_width="0dp"
@@ -134,7 +135,7 @@
         <Button
             android:id="@+id/resetbutton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:layout_gravity="center"
             android:autoSizeTextType="uniform"
@@ -148,7 +149,7 @@
         <Button
             android:id="@+id/startbutton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:layout_gravity="center"
             android:autoSizeTextType="uniform"
