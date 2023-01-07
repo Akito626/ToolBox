@@ -5,6 +5,7 @@
     <string name="counteractivity_title">カウンター</string>
     <string name="stopwatchactivity_title">ストップウォッチ</string>
     <string name="timeractivity_title">タイマー</string>
+    <string name="musiclistactivity_title">音楽ファイルの選択</string>
     <string name="clockactivity_title">時計</string>
     <string name="clockmenu_title">タイムゾーン</string>
     <string name="qrscanner_title">QRコードリーダー</string>
