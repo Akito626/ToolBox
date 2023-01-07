@@ -54,30 +54,32 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //String appname = adapter.getItem(position).toString();
+                String appname = adapter.getItem(position).toString();
+                int index = appname.indexOf("name=");
+                appname = appname.substring(index+5, appname.length()-1);
                 Intent intent;
-                switch (position){
-                    case 0:
+                switch (appname){
+                    case "電卓":
                         intent = new Intent(getApplication(), CalcActivity.class);
                         startActivity(intent);
                         break;
-                    case 1:
+                    case "カウンター":
                         intent = new Intent(getApplication(), CounterActivity.class);
                         startActivity(intent);
                         break;
-                    case 2:
+                    case "ストップウォッチ":
                         intent = new Intent(getApplication(), StopwatchActivity.class);
                         startActivity(intent);
                         break;
-                    case 3:
+                    case "タイマー":
                         intent = new Intent(getApplication(), TimerActivity.class);
                         startActivity(intent);
                         break;
-                    case 4:
+                    case "時計":
                         intent = new Intent(getApplication(), ClockActivity.class);
                         startActivity(intent);
                         break;
-                    case 5:
+                    case "QRコードリーダー":
                         intent = new Intent(getApplication(), QRScannerActivity.class);
                         startActivity(intent);
                         break;
