@@ -179,10 +179,7 @@ public class TimerActivity extends AppCompatActivity {
                     prepareLayout();
                     isstop = true;
                     timer.cancel();
-                    if(mp.isPlaying()) {
-                        mp.stop();
-                        mp.reset();
-                    }
+                    resetMediaplayer();
                     button.setText("スタート");
                 }
             }
@@ -207,20 +204,7 @@ public class TimerActivity extends AppCompatActivity {
         super.onResume();
         loadFile();
 
-        if(path != null){
-            try {
-                mp = new MediaPlayer();
-                mp.setDataSource(path);
-                mp.prepare();
-            }catch (Exception e){
-                mp = MediaPlayer.create(this, R.raw.defaultmusic);
-            }
-        } else{
-            mp = MediaPlayer.create(this, R.raw.defaultmusic);
-        }
-
-        mp.setLooping(true);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        resetMediaplayer();
     }
 
     @Override
@@ -299,6 +283,32 @@ public class TimerActivity extends AppCompatActivity {
         numberPicker1.setValue(nphour);
         numberPicker2.setValue(npminute);
         numberPicker3.setValue(npsecond);
+    }
+
+    // メディアプレイヤーを準備
+    private void resetMediaplayer(){
+        if(mp != null) {
+            if (mp.isPlaying()) {
+                mp.stop();
+                mp.reset();
+                mp.release();
+            }
+        }
+
+        if(path != null){
+            try {
+                mp = new MediaPlayer();
+                mp.setDataSource(path);
+                mp.prepare();
+            }catch (Exception e){
+                mp = MediaPlayer.create(this, R.raw.defaultmusic);
+            }
+        } else{
+            mp = MediaPlayer.create(this, R.raw.defaultmusic);
+        }
+
+        mp.setLooping(true);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     public void loadFile(){
