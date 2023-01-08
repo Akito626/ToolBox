@@ -164,9 +164,12 @@ public class TimerActivity extends AppCompatActivity {
                     }
                 }else if(str.equals("リセット")){
                     if(isstop) {
-                        numberPicker1.setValue(Integer.parseInt(hour));
-                        numberPicker2.setValue(Integer.parseInt(minute));
-                        numberPicker3.setValue(Integer.parseInt(second));
+                        nphour = Integer.parseInt(hour);
+                        npminute = Integer.parseInt(minute);
+                        npsecond = Integer.parseInt(second);
+                        numberPicker1.setValue(nphour);
+                        numberPicker2.setValue(npminute);
+                        numberPicker3.setValue(npsecond);
                     }
                 }else if(str.equals("停止")){
                     // レイアウトの切り替え
