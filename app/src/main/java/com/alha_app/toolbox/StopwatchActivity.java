@@ -149,7 +149,7 @@ public class StopwatchActivity extends AppCompatActivity {
         @Override
         public void run(){
             ms++;
-            if(ms == 99){
+            if(ms == 100){
                 ms = 0;
                 ss++;
             }
