@@ -17,13 +17,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/path"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:text="説明文を表示します。"
-        app:layout_constraintBottom_toBottomOf="@+id/title"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
