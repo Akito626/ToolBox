@@ -64,6 +64,8 @@ public class TimerActivity extends AppCompatActivity {
     private int npminute;
     private int npsecond;
 
+    private boolean isstop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +80,7 @@ public class TimerActivity extends AppCompatActivity {
         hour = minute = second = "0";
         nphour = npminute = npsecond = 0;
 
+        isstop = true;
         musicText = findViewById(R.id.musictext);
 
         Button startButton = findViewById(R.id.startbutton);
@@ -86,20 +89,23 @@ public class TimerActivity extends AppCompatActivity {
         View.OnTouchListener timertouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // ファイルの読み取り許可
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        mPermissionGranted = false;
-                        requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, RC_PERMISSION);
+                if (isstop) {
+                    // ファイルの読み取り許可
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            mPermissionGranted = false;
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_PERMISSION);
+                        } else {
+                            mPermissionGranted = true;
+                        }
                     } else {
                         mPermissionGranted = true;
                     }
-                } else {
-                    mPermissionGranted = true;
-                }
-                if (mPermissionGranted) {
-                    Intent intent = new Intent(getApplication(), MusicListActivity.class);
-                    startActivity(intent);
+                    if (mPermissionGranted) {
+                        Intent intent = new Intent(getApplication(), MusicListActivity.class);
+                        startActivity(intent);
+                    }
+                    return false;
                 }
                 return false;
             }
@@ -121,6 +127,7 @@ public class TimerActivity extends AppCompatActivity {
                         getLayoutInflater().inflate(R.layout.activity_timerrun, layout);
                         TextView timeText = findViewById(R.id.timetext);
                         TextView stoptimeText = findViewById(R.id.stoptimetext);
+                        isstop = false;
                         // 時間の取得
                         LocalTime localTime = LocalTime.now(ZoneId.of("Japan"));
                         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -156,14 +163,18 @@ public class TimerActivity extends AppCompatActivity {
                         button.setText("停止");
                     }
                 }else if(str.equals("リセット")){
-                    numberPicker1.setValue(Integer.parseInt(hour));
-                    numberPicker2.setValue(Integer.parseInt(minute));
-                    numberPicker3.setValue(Integer.parseInt(second));
+                    if(isstop) {
+                        numberPicker1.setValue(Integer.parseInt(hour));
+                        numberPicker2.setValue(Integer.parseInt(minute));
+                        numberPicker3.setValue(Integer.parseInt(second));
+                    }
                 }else if(str.equals("停止")){
+                    // レイアウトの切り替え
                     LinearLayout layout = findViewById(R.id.runlayout);
                     layout.removeAllViews();
                     getLayoutInflater().inflate(R.layout.activity_timerstop, layout);
                     prepareLayout();
+                    isstop = true;
                     timer.cancel();
                     if(mp.isPlaying()) {
                         mp.stop();
