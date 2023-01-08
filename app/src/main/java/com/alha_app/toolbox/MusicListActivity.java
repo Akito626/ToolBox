@@ -99,11 +99,11 @@ public class MusicListActivity extends AppCompatActivity {
                     // 入力テキストに変更があったとき
                     @Override
                     public boolean onQueryTextChange(String s) {
-                        if (s.equals("")) {
-                            list.clearTextFilter();
-                        } else {
-                            list.setFilterText(s);
-                        }
+                            if (s.equals("")) {
+                                list.clearTextFilter();
+                            } else {
+                                list.setFilterText(s);
+                            }
                         return false;
                     }
 
