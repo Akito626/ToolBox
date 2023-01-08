@@ -32,7 +32,7 @@ import java.util.Objects;
 
 public class MusicListActivity extends AppCompatActivity {
     private ArrayList<String> musictitle;
-    private ArrayList<String> musicpaths;
+    private Map<String, String> musicpaths;
     private final String mFileName = "Timer.txt";
 
     private String hour;
@@ -50,9 +50,9 @@ public class MusicListActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         musictitle = new ArrayList<String>();
-        musicpaths = new ArrayList<String>();
+        musicpaths = new HashMap<>();
         musictitle.add("defaultmusic");
-        musicpaths.add(null);
+        musicpaths.put("defaultmusic", null);
 
         readContent();
         loadFile();
@@ -61,7 +61,6 @@ public class MusicListActivity extends AppCompatActivity {
         for (int i = 0; i < musictitle.size(); i++) {
             Map<String, String> item = new HashMap<>();
             item.put("title", musictitle.get(i));
-            item.put("path", musicpaths.get(i));
             listData.add(item);
         }
 
@@ -71,28 +70,27 @@ public class MusicListActivity extends AppCompatActivity {
                 this,
                 listData,
                 R.layout.musiclist_item,
-                new String[] {"title", "path"},
-                new int[] {R.id.title, R.id.path}
+                new String[] {"title"},
+                new int[] {R.id.title}
         );
         list.setAdapter(adapter);
-
-        // テキストフィルターを有効にする
-        list.setTextFilterEnabled(true);
-        SearchView searchView = findViewById(R.id.search);
 
         // クリックイベント
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String str = adapter.getItem(i).toString();
-                int beginindex = str.indexOf("path=");
-                int endindex = str.indexOf("title=");
-                path = str.substring(beginindex+5, endindex-2);
-                music = str.substring(endindex+6, str.length()-1);
+                int index = str.indexOf("title=");
+                music = str.substring(index+6, str.length()-1);
+                path = musicpaths.get(music);
                 saveFile();
                 finish();
             }
         });
+
+        // テキストフィルターを有効にする
+        list.setTextFilterEnabled(true);
+        SearchView searchView = findViewById(R.id.search);
 
         searchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
@@ -104,7 +102,7 @@ public class MusicListActivity extends AppCompatActivity {
                             } else {
                                 list.setFilterText(s);
                             }
-                        return false;
+                            return false;
                     }
 
                     // 検索ボタンを押したとき
@@ -149,7 +147,8 @@ public class MusicListActivity extends AppCompatActivity {
                 do {
                     musictitle.add(cursor.getString(cursor.getColumnIndex(
                             MediaStore.Audio.Media.TITLE)));
-                    musicpaths.add(cursor.getString(cursor.getColumnIndex(
+                    musicpaths.put(cursor.getString(cursor.getColumnIndex(
+                            MediaStore.Audio.Media.TITLE)), cursor.getString(cursor.getColumnIndex(
                             MediaStore.Audio.Media.DATA)));
                 } while (cursor.moveToNext());
 
