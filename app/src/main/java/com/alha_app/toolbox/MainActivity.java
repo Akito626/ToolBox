@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -265,10 +266,19 @@ public class MainActivity extends AppCompatActivity {
                     writer.println(tools[i]);
                 }
             }
-            writer.close();
-            out.close();
         }catch(Exception e){
             Toast.makeText(this, "File save error!", Toast.LENGTH_LONG).show();
+        }finally {
+            if(writer != null){
+                try{
+                    writer.close();
+                } catch (Exception e2){ };
+            }
+            if(out != null){
+                try{
+                    out.close();
+                } catch (Exception e2){ };
+            }
         }
     }
 
@@ -291,10 +301,12 @@ public class MainActivity extends AppCompatActivity {
         if(files.length != 0) {
             String fileName = files[0].getName();
             //　ファイルを読み込み
+            InputStream in = null;
+            BufferedReader reader = null;
             try {
                 // ファイルオープン
-                InputStream in = this.openFileInput(fileName);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                in = this.openFileInput(fileName);
+                reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
                 String str = reader.readLine();
                 while (str != null){
@@ -306,6 +318,17 @@ public class MainActivity extends AppCompatActivity {
                 in.close();
             } catch (Exception e) {
                 Toast.makeText(this, "File read error!", Toast.LENGTH_LONG).show();
+            } finally {
+                if(reader != null){
+                    try{
+                        reader.close();
+                    } catch (Exception e2){ };
+                }
+                if(in != null){
+                    try{
+                        in.close();
+                    } catch (Exception e2){ };
+                }
             }
         }
     }
