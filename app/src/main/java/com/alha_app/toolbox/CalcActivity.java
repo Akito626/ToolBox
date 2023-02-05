@@ -120,7 +120,7 @@ public class CalcActivity extends AppCompatActivity {
                         }
                     }
                 } else if(str.equals("%")){
-                    if(prev.matches("[+ \\- × ÷ % \\.]")){
+                    if(prev.matches("[+ \\- × ÷ % \\. (]") || prev.equals("")){
                         Toast.makeText(CalcActivity.this, "無効な式です", Toast.LENGTH_SHORT).show();
                     } else {
                         text = text + str;
