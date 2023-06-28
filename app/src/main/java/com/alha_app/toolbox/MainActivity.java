@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, Boolean> isFavorite;
     private SimpleAdapter adapter;
     ArrayList<Map<String, Object>> listData;
+    String [] tools;
+    int star;
     private boolean isPushed;
     private final String mFileName = "favorite.txt";
 
@@ -46,15 +48,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String [] tools = getResources().getStringArray(R.array.tools);
+        // 初期化
+        tools = getResources().getStringArray(R.array.tools);
         isFavorite = new HashMap<>();
         isPushed = false;
         listData = new ArrayList<>();
+        star = R.drawable.star;
 
         for(int i = 0; i < tools.length; i++){
             isFavorite.put(tools[i], false);
         }
 
+        loadFavorite();
         prepareList();
     }
 
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             prepareList();
         }
-        loadFavorite();
     }
 
     @Override
@@ -114,8 +118,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.context_favorite:
                 if(isFavorite.get(appname)){
                     isFavorite.put(appname, false);
+                    for(int i = 0; i < tools.length; i++){
+                        if(appname.equals(tools[i])){
+                            listData.get(i).put("image_favorite", null);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
                 } else {
                     isFavorite.put(appname, true);
+                    for(int i = 0; i < tools.length; i++){
+                        if(appname.equals(tools[i])){
+                            listData.get(i).put("image_favorite", star);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
                 }
                 if(isPushed){
                     prepareFavoriteList();
@@ -128,17 +144,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepareList(){
-        String [] tools = getResources().getStringArray(R.array.tools);
         int [] images = {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
                 R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
-        int star = R.drawable.star;
 
         listData.clear();
         for (int i=0; i < tools.length; i++) {
             Map<String, Object> item = new HashMap<>();
             item.put("name", tools[i]);
             item.put("image", images[i]);
+            if(isFavorite.get(tools[i])){
+                item.put("image_favorite", star);
+            }
             listData.add(item);
         }
 
@@ -148,8 +165,8 @@ public class MainActivity extends AppCompatActivity {
                 this,
                 listData,
                 R.layout.list_item,
-                new String[] {"name", "image"},
-                new int[] {R.id.name, R.id.image}
+                new String[] {"name", "image", "image_favorite"},
+                new int[] {R.id.name, R.id.image, R.id.image_favorite}
         );
         list.setAdapter(adapter);
 
@@ -191,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepareFavoriteList(){
-        String [] tools = getResources().getStringArray(R.array.tools);
         int [] images = {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
                 R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
@@ -202,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             if(isFavorite.get(tools[i])) {
                 item.put("name", tools[i]);
                 item.put("image", images[i]);
+                item.put("image_favorite", star);
                 listData.add(item);
             }
         }
@@ -212,8 +229,8 @@ public class MainActivity extends AppCompatActivity {
                 this,
                 listData,
                 R.layout.list_item,
-                new String[] {"name", "image"},
-                new int[] {R.id.name, R.id.image}
+                new String[] {"name", "image", "image_favorite"},
+                new int[] {R.id.name, R.id.image, R.id.image_favorite}
         );
         list.setAdapter(adapter);
 
