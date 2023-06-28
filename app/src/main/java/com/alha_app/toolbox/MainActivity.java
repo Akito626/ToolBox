@@ -37,6 +37,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private Map<String, Boolean> isFavorite;
     private SimpleAdapter adapter;
+    ArrayList<Map<String, Object>> listData;
     private boolean isPushed;
     private final String mFileName = "favorite.txt";
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         String [] tools = getResources().getStringArray(R.array.tools);
         isFavorite = new HashMap<>();
         isPushed = false;
+        listData = new ArrayList<>();
 
         for(int i = 0; i < tools.length; i++){
             isFavorite.put(tools[i], false);
@@ -130,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
         int [] images = {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
                 R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
+        int star = R.drawable.star;
 
-        ImageView imageView;
-        ArrayList<Map<String, Object>> listData = new ArrayList<>();
+        listData.clear();
         for (int i=0; i < tools.length; i++) {
             Map<String, Object> item = new HashMap<>();
             item.put("name", tools[i]);
@@ -194,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
                 R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
 
-        ArrayList<Map<String, Object>> listData = new ArrayList<>();
+        listData.clear();
         for (int i=0; i < tools.length; i++) {
             Map<String, Object> item = new HashMap<>();
             if(isFavorite.get(tools[i])) {
