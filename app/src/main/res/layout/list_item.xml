@@ -25,7 +25,6 @@
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="@+id/image" />
 
-    <!--
     <ImageView
         android:id="@+id/image_favorite"
         android:layout_width="50dp"
@@ -33,6 +32,5 @@
         tools:src="@drawable/star"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
