@@ -29,9 +29,7 @@ public class WeatherActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         // 別スレッドで天気を取得
-        es.execute(() -> {
-            getCurrentWeather();
-        });
+        es.execute(() -> getCurrentWeather());
     }
 
     @Override
@@ -54,7 +52,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     public void getCurrentWeather(){
         String key = BuildConfig.KEY;
-        String urlString = "https://api.openweathermap.org/data/2.5/weather?lat=35.68&lon=139.77&appid=" + key;
+        String urlString = "https://api.openweathermap.org/data/2.5/weather?q=tokyo&appid=" + key + "&lang=ja&units=metric";
         String result = "";
         StringBuilder sb = new StringBuilder();
 
@@ -75,6 +73,5 @@ public class WeatherActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         System.out.println(result);
-        findViewById(R.id.weather_Load).setVisibility(View.GONE);
     }
 }
