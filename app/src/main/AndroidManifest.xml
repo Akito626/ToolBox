@@ -83,6 +83,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name="com.alha_app.toolbox.WeatherActivity"
+            android:label="@string/weather_title"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>

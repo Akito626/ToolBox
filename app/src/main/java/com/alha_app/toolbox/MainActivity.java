@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     public void prepareList(){
         int [] images = {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
+                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
 
         listData.clear();
         for (int i=0; i < tools.length; i++) {
@@ -158,59 +158,13 @@ public class MainActivity extends AppCompatActivity {
             }
             listData.add(item);
         }
-
-        // ListViewにデータをセットする
-        ListView list = findViewById(R.id.list);
-        adapter = new SimpleAdapter(
-                this,
-                listData,
-                R.layout.list_item,
-                new String[] {"name", "image", "image_favorite"},
-                new int[] {R.id.name, R.id.image, R.id.image_favorite}
-        );
-        list.setAdapter(adapter);
-
-        // クリックイベント
-        list.setOnItemClickListener((adapterView, view, position, l) -> {
-            String appname = adapter.getItem(position).toString();
-            int index = appname.indexOf("name=");
-            appname = appname.substring(index+5, appname.length()-1);
-            Intent intent;
-            switch (appname){
-                case "電卓":
-                    intent = new Intent(getApplication(), CalcActivity.class);
-                    startActivity(intent);
-                    break;
-                case "カウンター":
-                    intent = new Intent(getApplication(), CounterActivity.class);
-                    startActivity(intent);
-                    break;
-                case "ストップウォッチ":
-                    intent = new Intent(getApplication(), StopwatchActivity.class);
-                    startActivity(intent);
-                    break;
-                case "タイマー":
-                    intent = new Intent(getApplication(), TimerActivity.class);
-                    startActivity(intent);
-                    break;
-                case "時計":
-                    intent = new Intent(getApplication(), ClockActivity.class);
-                    startActivity(intent);
-                    break;
-                case "QRコードリーダー":
-                    intent = new Intent(getApplication(), QRScannerActivity.class);
-                    startActivity(intent);
-                    break;
-            }
-        });
-
-        registerForContextMenu(list);
+        setListView();
     }
 
     public void prepareFavoriteList(){
         int [] images = {
                 R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24};
+                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
 
         listData.clear();
         for (int i=0; i < tools.length; i++) {
@@ -222,7 +176,10 @@ public class MainActivity extends AppCompatActivity {
                 listData.add(item);
             }
         }
+        setListView();
+    }
 
+    public void setListView(){
         // ListViewにデータをセットする
         ListView list = findViewById(R.id.list);
         adapter = new SimpleAdapter(
@@ -265,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(getApplication(), QRScannerActivity.class);
                     startActivity(intent);
                     break;
+                case "天気":
+                    intent = new Intent(getApplication(), WeatherActivity.class);
+                    startActivity(intent);
             }
         });
 
