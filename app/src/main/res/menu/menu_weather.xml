@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_curtweather"
+        android:title="現在地から取得"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_serchweather"
+        android:title="検索"
+        app:showAsAction="never" />
+</menu>
