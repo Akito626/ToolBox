@@ -11,7 +11,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alha_app.toolbox.entities.WeatherData;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -24,6 +26,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class WeatherActivity extends AppCompatActivity {
+    WeatherData weatherData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +37,16 @@ public class WeatherActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         final Handler handler = new Handler();
+        weatherData = new WeatherData();
 
         // 別スレッドで天気を取得
         new Thread(() -> {
-            String json = getCurrentWeather();
+            JsonNode jsonResult = getCurrentWeather();
+
+            // メインスレッドに処理を依頼
             handler.post(() -> {
                 TextView textView = findViewById(R.id.weather_text);
-                textView.setText(json);
+                textView.setText(jsonResult.toString());
                 LinearLayout linearLayout = findViewById(R.id.weather_Load);
                 linearLayout.setVisibility(View.GONE);
             });
@@ -64,13 +71,13 @@ public class WeatherActivity extends AppCompatActivity {
         return result;
     }
 
-    public String getCurrentWeather(){
+    public JsonNode getCurrentWeather(){
         String key = BuildConfig.KEY;
         String urlString = "https://api.openweathermap.org/data/2.5/weather?q=tokyo&appid=" + key + "&lang=ja&units=metric";
         String json = "";
         StringBuilder sb = new StringBuilder();
+        JsonNode jsonResult = null;
 
-        Map<String, Object> map = null;
         ObjectMapper mapper = new ObjectMapper();
 
         try {
@@ -83,8 +90,12 @@ public class WeatherActivity extends AppCompatActivity {
                 sb.append(tmp);
             }
             json = sb.toString();
+            jsonResult = mapper.readTree(json);
 
-            map = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
+            weatherData.setWeather(jsonResult.get("weather").get(0).get("main").toString());
+            weatherData.setTemp_min(jsonResult.get("main").get("temp_min").asDouble());
+            weatherData.setTemp_max(jsonResult.get("main").get("temp_max").asDouble());
+            weatherData.setHumidity(jsonResult.get("main").get("humidity").asInt());
 
             br.close();
             con.disconnect();
@@ -92,6 +103,6 @@ public class WeatherActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        return json;
+        return jsonResult;
     }
 }
