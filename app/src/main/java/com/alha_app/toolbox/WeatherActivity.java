@@ -3,11 +3,13 @@ package com.alha_app.toolbox;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.JsonReader;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -54,6 +56,12 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_weather, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuButton){
         boolean result = true;
         int buttonId = menuButton.getItemId();
@@ -62,6 +70,12 @@ public class WeatherActivity extends AppCompatActivity {
             case android.R.id.home:
                 //画面を終了させる
                 finish();
+                break;
+            // 現在地から天気を取得
+            case R.id.action_curtweather:
+                break;
+            // 天気を検索
+            case R.id.action_serchweather:
                 break;
             //それ以外の時
             default:
