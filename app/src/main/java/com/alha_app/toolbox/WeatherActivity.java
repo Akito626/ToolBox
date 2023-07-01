@@ -67,17 +67,17 @@ public class WeatherActivity extends AppCompatActivity {
 
         LatLng tokyo = new LatLng(35.6894, 139.6917);
         // 別スレッドで天気を取得
-        new Thread(() -> {
-            JsonNode jsonResult = getCurrentWeather(tokyo);
-
-            // メインスレッドに処理を依頼
-            handler.post(() -> {
-                TextView textView = findViewById(R.id.weather_text);
-                textView.setText(jsonResult.toString());
-                LinearLayout linearLayout = findViewById(R.id.weather_Load);
-                linearLayout.setVisibility(View.GONE);
-            });
-        }).start();
+//        new Thread(() -> {
+//            JsonNode jsonResult = getCurrentWeather(tokyo);
+//
+//            // メインスレッドに処理を依頼
+//            handler.post(() -> {
+//                TextView textView = findViewById(R.id.weather_text);
+//                textView.setText(jsonResult.toString());
+//                LinearLayout linearLayout = findViewById(R.id.weather_Load);
+//                linearLayout.setVisibility(View.GONE);
+//            });
+//        }).start();
     }
 
     @Override
@@ -102,7 +102,10 @@ public class WeatherActivity extends AppCompatActivity {
                 break;
             // 天気を検索
             case R.id.action_serchweather:
-                serchLocationWeather();
+                System.out.println("push");
+                new Thread(() -> {
+                    serchLocationWeather();
+                }).start();
                 break;
             //それ以外の時
             default:
@@ -175,7 +178,6 @@ public class WeatherActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(jsonResult.toString());
 
         return jsonResult;
     }
@@ -204,20 +206,42 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     public void serchLocationWeather(){
-        if (!Geocoder.isPresent()) return;
-        Geocoder geocoder = new Geocoder(getApplicationContext());
-        EditText editText = findViewById(R.id.edit_text);
+        String key = BuildConfig.KEY;
+        String pName = "kobe";
+        String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
+        String json = "";
+        StringBuilder sb = new StringBuilder();
+        JsonNode jsonResult = null;
+        ObjectMapper mapper = new ObjectMapper();
+        LatLng latLng = null;
 
-        new Thread(() -> {
-            try {
-                address = geocoder.getFromLocationName(editText.getText().toString(), 1);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        System.out.println("取得開始");
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String tmp = "";
+            while ((tmp = br.readLine()) != null) {
+                sb.append(tmp);
             }
-            handler.post(() -> {
-                TextView textView = findViewById(R.id.weather_text);
-                textView.setText(address.get(0).toString());
-            });
+            json = sb.toString();
+            jsonResult = mapper.readTree(json);
+            latLng = new LatLng(jsonResult.get(0).get("lat").asDouble(), jsonResult.get(0).get("lon").asDouble());
+
+            br.close();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonNode jsonNode = getCurrentWeather(latLng);
+        handler.post(() -> {
+            TextView textView = findViewById(R.id.weather_text);
+            textView.setText(jsonNode.toString());
+            LinearLayout linearLayout = findViewById(R.id.weather_Load);
+            linearLayout.setVisibility(View.GONE);
         });
     }
 }
