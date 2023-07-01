@@ -23,9 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.alha_app.toolbox.entities.LatLng;
 import com.alha_app.toolbox.entities.WeatherData;
+import com.alha_app.toolbox.entities.WeatherFragmentStateAdapter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.location.CurrentLocationRequest;
@@ -36,6 +38,10 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,11 +67,26 @@ public class WeatherActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
+        ViewPager2 pager = (ViewPager2)findViewById(R.id.weather_viewPager);
+        WeatherFragmentStateAdapter adapter = new WeatherFragmentStateAdapter(this);
+        pager.setAdapter(adapter);
+
+        TabLayout tabs = (TabLayout) findViewById(R.id.weathertab_layout);
+        new TabLayoutMediator(tabs, pager, (tab, position) -> {
+            switch (position){
+                case 0:
+                    tab.setText("今日の天気");
+                    break;
+                case 1:
+                    tab.setText("毎日の天気");
+            }
+        }).attach();
+
         handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         weatherData = new WeatherData();
 
-        LatLng tokyo = new LatLng(35.6894, 139.6917);
+//        LatLng tokyo = new LatLng(35.6894, 139.6917);
         // 別スレッドで天気を取得
 //        new Thread(() -> {
 //            JsonNode jsonResult = getCurrentWeather(tokyo);
@@ -237,11 +258,5 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         JsonNode jsonNode = getCurrentWeather(latLng);
-        handler.post(() -> {
-            TextView textView = findViewById(R.id.weather_text);
-            textView.setText(jsonNode.toString());
-            LinearLayout linearLayout = findViewById(R.id.weather_Load);
-            linearLayout.setVisibility(View.GONE);
-        });
     }
 }
