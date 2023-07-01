@@ -1,12 +1,17 @@
 package com.alha_app.toolbox.entities;
 
 public class WeatherData {
+    String name;
     String weather;
     double temp_min;
     double temp_max;
     int humidity;
 
     // Getter
+
+    public String getName() {
+        return name;
+    }
     public String getWeather() {
         return weather;
     }
@@ -21,6 +26,9 @@ public class WeatherData {
     }
 
     // Setter
+    public void setName(String name) {
+        this.name = name;
+    }
     public void setWeather(String weather) {
         this.weather = weather;
     }
