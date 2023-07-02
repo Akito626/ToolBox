@@ -1,15 +1,21 @@
 package com.alha_app.toolbox;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -55,16 +61,36 @@ public class WeatherFragment extends Fragment {
                 setWeathers(view);
             });
         }).start();
+
+        Button button = view.findViewById(R.id.search_button);
+        button.setOnClickListener(view1 -> {
+            button.setEnabled(false);
+            new Thread(() -> {
+                searchLocation(view);
+
+                handler.post(() -> {
+                    setWeathers(view);
+                    button.setEnabled(true);
+                });
+            }).start();
+        });
     }
 
-    public JsonNode getWeathers(LatLng latLng) {
+    public void getWeathers(LatLng latLng) {
         String key = BuildConfig.KEY;
         String urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
         String json = "";
         StringBuilder sb = new StringBuilder();
         JsonNode jsonResult = null;
-
         ObjectMapper mapper = new ObjectMapper();
+
+//        if(str != null){
+//            System.out.println("場所");
+//            urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + str + "&appid=" + key + "&lang=ja&units=metric";
+//        } else {
+//            System.out.println("LatLng");
+//            urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
+//        }
 
         try {
             URL url = new URL(urlString);
@@ -80,6 +106,9 @@ public class WeatherFragment extends Fragment {
 
             // 名前を保存
             locationName = jsonResult.get("city").get("name").toString().replace("\"", "");
+//            SharedPreferences preferences = getActivity().getSharedPreferences("weatherData", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString("locationName", locationName);
 
             for(int i = 0; i < jsonResult.get("list").size(); i++){
                 weatherData[i] = new WeatherData();
@@ -96,13 +125,12 @@ public class WeatherFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return jsonResult;
     }
 
     public void setWeathers(View view){
         // scrollviewを取得
         LinearLayout weatherList = view.findViewById(R.id.scroll_weathers);
+        weatherList.removeAllViews();
 
         // 住所をセット
         TextView locationText = view.findViewById(R.id.location_name);
@@ -166,7 +194,7 @@ public class WeatherFragment extends Fragment {
 
             // viewにデータをセット
             dayText.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            if(i-1 >= 0 && !weatherData[i-1].getDay().equals(weatherData[i].getDay())){
+            if(i == 0 || (i-1 >= 0 && !weatherData[i-1].getDay().equals(weatherData[i].getDay()))){
                 dayText.setText(weatherData[i].getDay());
             }
             timeText.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
@@ -212,6 +240,40 @@ public class WeatherFragment extends Fragment {
             linearLayout.addView(humidityText);
 
             weatherList.addView(linearLayout);
+        }
+    }
+
+    public void searchLocation(View view){
+        String key = BuildConfig.KEY;
+        EditText editText = view.findViewById(R.id.search_text);
+        String pName = editText.getText().toString();
+        String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
+        String json = "";
+        StringBuilder sb = new StringBuilder();
+        JsonNode jsonResult = null;
+        ObjectMapper mapper = new ObjectMapper();
+        LatLng latLng = null;
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String tmp = "";
+            while ((tmp = br.readLine()) != null) {
+                sb.append(tmp);
+            }
+            json = sb.toString();
+            jsonResult = mapper.readTree(json);
+            double latitude = jsonResult.get(0).get("lat").asDouble();
+            double longitude = jsonResult.get(0).get("lon").asDouble();
+            latLng = new LatLng(latitude, longitude);
+            getWeathers(latLng);
+
+            br.close();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
