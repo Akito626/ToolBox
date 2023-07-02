@@ -1,12 +1,8 @@
 package com.alha_app.toolbox;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 
 import com.alha_app.toolbox.entities.LatLng;
@@ -27,14 +22,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 
-public class TodayWeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment {
     private String locationName;
     private WeatherData[] weatherData;
 
-    public static TodayWeatherFragment newInstance(){
-        TodayWeatherFragment fragment = new TodayWeatherFragment();
+    public static WeatherFragment newInstance(){
+        WeatherFragment fragment = new WeatherFragment();
         return fragment;
     }
 
@@ -43,7 +37,7 @@ public class TodayWeatherFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_todayweather,
+        return inflater.inflate(R.layout.fragment_weather,
                 container, false);
     }
 
@@ -57,7 +51,9 @@ public class TodayWeatherFragment extends Fragment {
         new Thread(() -> {
             getWeathers(new LatLng(35.6894, 139.6917));
 
-            handler.post(() -> setWeathers(view));
+            handler.post(() -> {
+                setWeathers(view);
+            });
         }).start();
     }
 

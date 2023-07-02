@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.alha_app.toolbox.DailyWeatherFragment;
-import com.alha_app.toolbox.TodayWeatherFragment;
+import com.alha_app.toolbox.WeatherMapFragment;
+import com.alha_app.toolbox.WeatherFragment;
 
 public class WeatherFragmentStateAdapter extends FragmentStateAdapter {
     public WeatherFragmentStateAdapter(FragmentActivity fragment){
@@ -19,10 +19,10 @@ public class WeatherFragmentStateAdapter extends FragmentStateAdapter {
         Fragment fragment = null;
         switch (position){
             case 0:
-                fragment = new TodayWeatherFragment();
+                fragment = new WeatherFragment();
                 break;
             case 1:
-                fragment = new DailyWeatherFragment();
+                fragment = new WeatherMapFragment();
                 break;
         }
         return fragment;

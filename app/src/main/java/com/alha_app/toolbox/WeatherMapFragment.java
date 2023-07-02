@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-public class DailyWeatherFragment extends Fragment {
+public class WeatherMapFragment extends Fragment {
 
-    public static DailyWeatherFragment newInstance(){
-        DailyWeatherFragment fragment = new DailyWeatherFragment();
+    public static WeatherMapFragment newInstance(){
+        WeatherMapFragment fragment = new WeatherMapFragment();
         return fragment;
     }
 
@@ -19,7 +19,7 @@ public class DailyWeatherFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_dailyweather,
+        return inflater.inflate(R.layout.fragment_weathermap,
                 container, false);
     }
 
