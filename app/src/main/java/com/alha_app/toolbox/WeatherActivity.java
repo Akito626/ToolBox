@@ -68,6 +68,7 @@ public class WeatherActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         ViewPager2 pager = (ViewPager2)findViewById(R.id.weather_viewPager);
+        pager.setUserInputEnabled(false);
         WeatherFragmentStateAdapter adapter = new WeatherFragmentStateAdapter(this);
         pager.setAdapter(adapter);
 
@@ -75,30 +76,14 @@ public class WeatherActivity extends AppCompatActivity {
         new TabLayoutMediator(tabs, pager, (tab, position) -> {
             switch (position){
                 case 0:
-                    tab.setText("今日の天気");
+                    tab.setText("天気");
                     break;
                 case 1:
-                    tab.setText("毎日の天気");
+                    tab.setText("雨雲レーダー");
             }
         }).attach();
 
-        handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        weatherData = new WeatherData();
-
-//        LatLng tokyo = new LatLng(35.6894, 139.6917);
-        // 別スレッドで天気を取得
-//        new Thread(() -> {
-//            JsonNode jsonResult = getCurrentWeather(tokyo);
-//
-//            // メインスレッドに処理を依頼
-//            handler.post(() -> {
-//                TextView textView = findViewById(R.id.weather_text);
-//                textView.setText(jsonResult.toString());
-//                LinearLayout linearLayout = findViewById(R.id.weather_Load);
-//                linearLayout.setVisibility(View.GONE);
-//            });
-//        }).start();
     }
 
     @Override
@@ -119,14 +104,10 @@ public class WeatherActivity extends AppCompatActivity {
                 break;
             // 現在地から天気を取得
             case R.id.action_curtweather:
-                requestPermission();
                 break;
             // 天気を検索
             case R.id.action_serchweather:
                 System.out.println("push");
-                new Thread(() -> {
-                    serchLocationWeather();
-                }).start();
                 break;
             //それ以外の時
             default:
@@ -148,7 +129,6 @@ public class WeatherActivity extends AppCompatActivity {
             case RC_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 許可が取れた場合の処理
-                    getCurrentLocationWeather();
                 } else {
                     Toast toast = Toast.makeText(this, "許可が必要です", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -167,96 +147,60 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
-    public JsonNode getCurrentWeather(LatLng latLng) {
-        String key = BuildConfig.KEY;
-        String urlString = "https://api.openweathermap.org/data/2.5/weather?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
-        String json = "";
-        StringBuilder sb = new StringBuilder();
-        JsonNode jsonResult = null;
+//    public void getCurrentLocationWeather() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+//            if(location == null){
+//                Toast toast = Toast.makeText(this, "位置情報が取得できませんでした", Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.CENTER, 0, 0);
+//                toast.show();
+//                return;
+//            }
+//
+//            System.out.println("latitude" + location.getLatitude());
+//            System.out.println("longitude" + location.getLongitude());
+//
+//            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//            new Thread(() -> {
+//                getCurrentWeather(latLng);
+//            });
+//        });
+//    }
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.connect();
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String tmp = "";
-            while ((tmp = br.readLine()) != null) {
-                sb.append(tmp);
-            }
-            json = sb.toString();
-            jsonResult = mapper.readTree(json);
-
-            weatherData.setName(jsonResult.get("name").toString());
-            weatherData.setWeather(jsonResult.get("weather").get(0).get("main").toString());
-            weatherData.setTemp_min(jsonResult.get("main").get("temp_min").asDouble());
-            weatherData.setTemp_max(jsonResult.get("main").get("temp_max").asDouble());
-            weatherData.setHumidity(jsonResult.get("main").get("humidity").asInt());
-
-            br.close();
-            con.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return jsonResult;
-    }
-
-    public void getCurrentLocationWeather() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if(location == null){
-                Toast toast = Toast.makeText(this, "位置情報が取得できませんでした", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                return;
-            }
-
-            System.out.println("latitude" + location.getLatitude());
-            System.out.println("longitude" + location.getLongitude());
-
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            new Thread(() -> {
-                getCurrentWeather(latLng);
-            });
-        });
-    }
-
-    public void serchLocationWeather(){
-        String key = BuildConfig.KEY;
-        String pName = "kobe";
-        String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
-        String json = "";
-        StringBuilder sb = new StringBuilder();
-        JsonNode jsonResult = null;
-        ObjectMapper mapper = new ObjectMapper();
-        LatLng latLng = null;
-
-        System.out.println("取得開始");
-
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.connect();
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String tmp = "";
-            while ((tmp = br.readLine()) != null) {
-                sb.append(tmp);
-            }
-            json = sb.toString();
-            jsonResult = mapper.readTree(json);
-            latLng = new LatLng(jsonResult.get(0).get("lat").asDouble(), jsonResult.get(0).get("lon").asDouble());
-
-            br.close();
-            con.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        JsonNode jsonNode = getCurrentWeather(latLng);
-    }
+//    public void serchLocationWeather(){
+//        String key = BuildConfig.KEY;
+//        String pName = "kobe";
+//        String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
+//        String json = "";
+//        StringBuilder sb = new StringBuilder();
+//        JsonNode jsonResult = null;
+//        ObjectMapper mapper = new ObjectMapper();
+//        LatLng latLng = null;
+//
+//        System.out.println("取得開始");
+//
+//        try {
+//            URL url = new URL(urlString);
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.connect();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//            String tmp = "";
+//            while ((tmp = br.readLine()) != null) {
+//                sb.append(tmp);
+//            }
+//            json = sb.toString();
+//            jsonResult = mapper.readTree(json);
+//            latLng = new LatLng(jsonResult.get(0).get("lat").asDouble(), jsonResult.get(0).get("lon").asDouble());
+//
+//            br.close();
+//            con.disconnect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        JsonNode jsonNode = getCurrentWeather(latLng);
+//    }
 }
