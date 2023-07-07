@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private SimpleAdapter adapter;
     ArrayList<Map<String, Object>> listData;
     String [] tools;
+
+    int[] images;
     int star;
     private boolean isPushed;
     private final String mFileName = "favorite.txt";
@@ -55,8 +57,14 @@ public class MainActivity extends AppCompatActivity {
         listData = new ArrayList<>();
         star = R.drawable.star;
 
+        // 画像初期化
+        int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
+                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate};
+        images = new int[tools.length];
+
         for(int i = 0; i < tools.length; i++){
             isFavorite.put(tools[i], false);
+            images[i] = tmp[i];
         }
 
         loadFavorite();
@@ -144,9 +152,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepareList(){
-        int [] images = {
-                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
+//        int [] images = {
+//                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
+//                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
 
         listData.clear();
         for (int i=0; i < tools.length; i++) {
@@ -162,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepareFavoriteList(){
-        int [] images = {
-                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
+//        int [] images = {
+//                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
+//                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
 
         listData.clear();
         for (int i=0; i < tools.length; i++) {
@@ -225,6 +233,11 @@ public class MainActivity extends AppCompatActivity {
                 case "天気":
                     intent = new Intent(getApplication(), WeatherActivity.class);
                     startActivity(intent);
+                    break;
+                case "翻訳":
+                    intent = new Intent(getApplication(), TranslatorActivity.class);
+                    startActivity(intent);
+                    break;
             }
         });
 

@@ -87,12 +87,6 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_weather, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuButton) {
         boolean result = true;
         int buttonId = menuButton.getItemId();
@@ -101,13 +95,6 @@ public class WeatherActivity extends AppCompatActivity {
             case android.R.id.home:
                 //画面を終了させる
                 finish();
-                break;
-            // 現在地から天気を取得
-            case R.id.action_curtweather:
-                break;
-            // 天気を検索
-            case R.id.action_serchweather:
-                System.out.println("push");
                 break;
             //それ以外の時
             default:
@@ -146,61 +133,4 @@ public class WeatherActivity extends AppCompatActivity {
             }
         }
     }
-
-//    public void getCurrentLocationWeather() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//
-//        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-//            if(location == null){
-//                Toast toast = Toast.makeText(this, "位置情報が取得できませんでした", Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.CENTER, 0, 0);
-//                toast.show();
-//                return;
-//            }
-//
-//            System.out.println("latitude" + location.getLatitude());
-//            System.out.println("longitude" + location.getLongitude());
-//
-//            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            new Thread(() -> {
-//                getCurrentWeather(latLng);
-//            });
-//        });
-//    }
-
-//    public void serchLocationWeather(){
-//        String key = BuildConfig.KEY;
-//        String pName = "kobe";
-//        String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
-//        String json = "";
-//        StringBuilder sb = new StringBuilder();
-//        JsonNode jsonResult = null;
-//        ObjectMapper mapper = new ObjectMapper();
-//        LatLng latLng = null;
-//
-//        System.out.println("取得開始");
-//
-//        try {
-//            URL url = new URL(urlString);
-//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//            con.connect();
-//            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//            String tmp = "";
-//            while ((tmp = br.readLine()) != null) {
-//                sb.append(tmp);
-//            }
-//            json = sb.toString();
-//            jsonResult = mapper.readTree(json);
-//            latLng = new LatLng(jsonResult.get(0).get("lat").asDouble(), jsonResult.get(0).get("lon").asDouble());
-//
-//            br.close();
-//            con.disconnect();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        JsonNode jsonNode = getCurrentWeather(latLng);
-//    }
 }
