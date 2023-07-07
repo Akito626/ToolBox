@@ -10,6 +10,7 @@
     <string name="clockmenu_title">タイムゾーン</string>
     <string name="qrscanner_title">QRコードリーダー</string>
     <string name="weather_title">天気</string>
+    <string name="translator_title">翻訳</string>
 
     <string-array name="tools">
         <item>電卓</item>
@@ -19,6 +20,7 @@
         <item>時計</item>
         <item>QRコードリーダー</item>
         <item>天気</item>
+        <item>翻訳</item>
     </string-array>
 
     <string name="calc_0">0</string>
