@@ -11,6 +11,7 @@
         android:layout_weight="0.05" />
 
     <EditText
+        android:id="@+id/before_translationtext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.35"
@@ -47,6 +48,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/after_translationtext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.35"
@@ -54,6 +56,22 @@
         android:inputType="textMultiLine"
         android:background="@drawable/border"
         android:gravity="top|left"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+
+        <Button
+            android:id="@+id/translate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:autoSizeTextType="uniform"
+            android:text="翻訳"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+    </FrameLayout>
 
     <Space
         android:layout_width="match_parent"
