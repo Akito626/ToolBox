@@ -2,24 +2,21 @@ package com.alha_app.toolbox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.google.android.gms.oss.licenses.OssLicensesActivity;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -93,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // メニューの設定
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -104,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
                     isPushed = true;
                     prepareFavoriteList();
                 }
+                break;
+            case R.id.action_license:
+                OssLicensesMenuActivity.setActivityTitle("ライセンス");
+                startActivity(new Intent(getApplication(), OssLicensesMenuActivity.class));
                 break;
         }
         return true;
@@ -169,11 +171,9 @@ public class MainActivity extends AppCompatActivity {
         setListView();
     }
 
-    public void prepareFavoriteList(){
-//        int [] images = {
-//                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-//                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
+    // お気に入りに追加したアイテムのリスト
 
+    public void prepareFavoriteList(){
         listData.clear();
         for (int i=0; i < tools.length; i++) {
             Map<String, Object> item = new HashMap<>();

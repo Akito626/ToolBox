@@ -8,4 +8,9 @@
         android:title="リセット"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_license"
+        android:title="ライセンス"
+        app:showAsAction="never"/>
+
 </menu>
