@@ -36,6 +36,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions{
+        exclude 'META-INF/DEPENDENCIES'
+    }
 }
 
 dependencies {
@@ -58,4 +61,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
+
+    // OAuth1.0a
+    implementation('oauth.signpost:signpost-core:2.1.1')
+    implementation('oauth.signpost:signpost-commonshttp4:2.1.1')
 }
