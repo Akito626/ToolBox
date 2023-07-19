@@ -43,4 +43,14 @@
     <string name="calc_parentheses">( )</string>
     <string name="calc_period">.</string>
     <string name="calc_percent">%</string>
+
+    <string-array name="language">
+        <item>日本語</item>
+        <item>英語</item>
+    </string-array>
+    
+    <string-array name="language_url">
+        <item>ja</item>
+        <item>en</item>
+    </string-array>
 </resources>
