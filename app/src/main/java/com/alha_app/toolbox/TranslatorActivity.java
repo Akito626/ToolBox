@@ -1,5 +1,8 @@
 package com.alha_app.toolbox;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -8,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -184,6 +188,7 @@ public class TranslatorActivity extends AppCompatActivity {
             }
         });
 
+        // 入れ替えボタンを押したときのイベント
         Button switchButton = findViewById(R.id.switch_button);
         switchButton.setOnClickListener(view -> {
             originalSpinner.setSelection(translatedSelect);
@@ -192,6 +197,18 @@ public class TranslatorActivity extends AppCompatActivity {
             String tmp = originalText.getText().toString();
             originalText.setText(translatedText.getText().toString());
             translatedText.setText(tmp);
+        });
+
+        // コピーボタンのイベント
+        ImageButton copyButton = findViewById(R.id.copy_button);
+        copyButton.setOnClickListener(view -> {
+            ClipboardManager clipboardManager = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+            if(clipboardManager == null){
+                return;
+            }
+
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("", translatedText.getText().toString()));
+            Toast.makeText(this, "クリップボードにコピーしました", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -258,6 +275,11 @@ public class TranslatorActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+            handler.post(() -> {
+                loadingBar.setVisibility(View.INVISIBLE);
+                isTranslating = false;
+                Toast.makeText(this, "エラーが発生しました", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }
