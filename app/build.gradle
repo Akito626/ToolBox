@@ -40,6 +40,12 @@ android {
     packagingOptions{
         exclude 'META-INF/DEPENDENCIES'
     }
+
+    defaultConfig {
+        buildConfigField "String", "TTKEY", "\"${project.property("TTKey")}\""
+        buildConfigField "String", "TTKEYSECRET", "\"${project.property("TTKeySecret")}\""
+        buildConfigField "String", "USERNAME", "\"${project.property("username")}\""
+    }
 }
 
 dependencies {
@@ -64,8 +70,12 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
 
     // OAuth1.0a
+    implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
     implementation('oauth.signpost:signpost-core:2.1.1')
     implementation('oauth.signpost:signpost-commonshttp4:2.1.1')
 
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
+
+    // OkHttp3
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }
