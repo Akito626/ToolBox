@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,11 +86,17 @@ public class TranslatorActivity extends AppCompatActivity {
 
     private EditText originalText;
     private TextView translatedText;
+    private ProgressBar loadingBar;
 
     private Handler handler;
 
     private String originalLang;
     private String translatedLang;
+
+    private int originalSelect;
+    private int translatedSelect;
+
+    private boolean isTranslating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +110,9 @@ public class TranslatorActivity extends AppCompatActivity {
         handler = new Handler();
         originalText = findViewById(R.id.original_text);
         translatedText = findViewById(R.id.translated_text);
+        loadingBar = findViewById(R.id.loading_bar);
+
+        isTranslating = false;
 
         Spinner originalSpinner = findViewById(R.id.original_language);
         Spinner translatedSpinner = findViewById(R.id.translated_language);
@@ -117,9 +127,17 @@ public class TranslatorActivity extends AppCompatActivity {
 
         String[] langList = getResources().getStringArray(R.array.language_url);
 
+        // デフォルトのスピナー位置
+        originalSelect = 1;
+        translatedSelect = 0;
+
+        originalSpinner.setSelection(originalSelect);
+        translatedSpinner.setSelection(translatedSelect);
+
         originalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                originalSelect = i;
                 originalLang = langList[i];
             }
 
@@ -131,6 +149,7 @@ public class TranslatorActivity extends AppCompatActivity {
         translatedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                translatedSelect = i;
                 translatedLang = langList[i];
             }
 
@@ -140,19 +159,39 @@ public class TranslatorActivity extends AppCompatActivity {
             }
         });
 
+        // 翻訳ボタンを押した時のイベント
         Button translateButton = findViewById(R.id.translate_button);
         translateButton.setOnClickListener(view -> {
             if(originalLang.equals(translatedLang)){
                 Toast.makeText(this, "同じ言語です", Toast.LENGTH_SHORT).show();
                 return;
             }
-            new Thread(() -> {
-                try {
-                    translate();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }).start();
+            if(originalText.getText().toString().equals("")){
+                Toast.makeText(this, "文字を入力してください", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if(!isTranslating) {
+                isTranslating = true;
+                loadingBar.setVisibility(View.VISIBLE);
+                new Thread(() -> {
+                    try {
+                        translate();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+            }
+        });
+
+        Button switchButton = findViewById(R.id.switch_button);
+        switchButton.setOnClickListener(view -> {
+            originalSpinner.setSelection(translatedSelect);
+            translatedSpinner.setSelection(originalSelect);
+
+            String tmp = originalText.getText().toString();
+            originalText.setText(translatedText.getText().toString());
+            translatedText.setText(tmp);
         });
     }
 
@@ -212,9 +251,10 @@ public class TranslatorActivity extends AppCompatActivity {
             jsonResult = mapper.readTree(json);
             String result = jsonResult.get("resultset").get("result").get("text").toString();
             handler.post(() -> {
+                loadingBar.setVisibility(View.INVISIBLE);
                 translatedText.setText(result.substring(1, result.length() - 1));
+                isTranslating = false;
             });
-            System.out.println();
 
         } catch (Exception e) {
             e.printStackTrace();
