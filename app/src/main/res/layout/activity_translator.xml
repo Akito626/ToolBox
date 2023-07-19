@@ -11,21 +11,29 @@
         android:layout_height="0dp"
         android:layout_weight="0.05" />
 
-    <EditText
-        android:id="@+id/original_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.35"
-        android:textSize="25dp"
-        android:inputType="textMultiLine"
-        android:background="@drawable/border"
-        android:gravity="top|left"/>
+        android:background="@drawable/border">
+
+        <EditText
+            android:id="@+id/original_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:background="#00000000"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="0.05">
+        android:layout_weight="0.05"
+        android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -38,26 +46,40 @@
                 android:layout_gravity="left" />
 
             <Button
+                android:id="@+id/switch_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:autoSizeTextType="uniform"
-                android:text="↕"
-                android:textColor="@color/black"
                 android:backgroundTint="#afafb0"
                 android:gravity="center"
-                android:layout_gravity="center"/>
+                android:text="↕"
+                android:textColor="@color/black" />
         </FrameLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/translated_text"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.35"
-        android:textSize="20dp"
-        android:inputType="textMultiLine"
-        android:background="@drawable/border"
-        android:gravity="top|left"/>
+        android:background="@drawable/border">
+
+        <TextView
+            android:id="@+id/translated_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:textSize="25dp"
+            android:layout_margin="5dp"/>
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -69,15 +91,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
+            android:layout_margin="5dp"
             android:autoSizeTextType="uniform"
             android:text="翻訳"
-            android:textColor="@color/black"
-            android:layout_margin="5dp"/>
+            android:textColor="@color/black" />
     </FrameLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1"/>
+        android:layout_weight="0.1" />
 
 </LinearLayout>

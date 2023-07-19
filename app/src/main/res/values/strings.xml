@@ -47,10 +47,18 @@
     <string-array name="language">
         <item>日本語</item>
         <item>英語</item>
+        <item>韓国語</item>
+        <item>中国語(繁体)</item>
+        <item>中国語(簡体)</item>
+        <item>ドイツ語</item>
     </string-array>
     
     <string-array name="language_url">
         <item>ja</item>
         <item>en</item>
+        <item>ko</item>
+        <item>zh-TW</item>
+        <item>zh-CN</item>
+        <item>de</item>
     </string-array>
 </resources>
