@@ -22,16 +22,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            if (project.hasProperty('weatherkey')) {
-                buildConfigField 'String', 'KEY', project.weatherkey
-            }
-        }
-        release {
-            if (project.hasProperty('weatherkey')) {
-                buildConfigField 'boolean', 'KEY', project.weatherkey
-            }
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -42,6 +32,7 @@ android {
     }
 
     defaultConfig {
+        buildConfigField "String", "WEATHERKEY", "\"${project.property("WeatherKey")}\""
         buildConfigField "String", "TTKEY", "\"${project.property("TTKey")}\""
         buildConfigField "String", "TTKEYSECRET", "\"${project.property("TTKeySecret")}\""
         buildConfigField "String", "USERNAME", "\"${project.property("username")}\""
@@ -78,4 +69,6 @@ dependencies {
 
     // OkHttp3
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
+    implementation 'com.jaredrummler:colorpicker:1.1.0'
 }

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 画像初期化
         int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate};
+                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette};
         images = new int[tools.length];
 
         for(int i = 0; i < tools.length; i++){
@@ -238,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(getApplication(), TranslatorActivity.class);
                     startActivity(intent);
                     break;
+                case "カラーピッカー":
+                    startActivity(new Intent(getApplication(), ColorPickerActivity.class));
             }
         });
 
