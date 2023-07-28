@@ -11,6 +11,7 @@
     <string name="qrscanner_title">QRコードリーダー</string>
     <string name="weather_title">天気</string>
     <string name="translator_title">翻訳</string>
+    <string name="colorpicker_title">カラーピッカー</string>
 
     <string-array name="tools">
         <item>電卓</item>
@@ -21,6 +22,7 @@
         <item>QRコードリーダー</item>
         <item>天気</item>
         <item>翻訳</item>
+        <item>カラーピッカー</item>
     </string-array>
 
     <string name="calc_0">0</string>
@@ -52,7 +54,7 @@
         <item>中国語(簡体)</item>
         <item>ドイツ語</item>
     </string-array>
-    
+
     <string-array name="language_url">
         <item>ja</item>
         <item>en</item>

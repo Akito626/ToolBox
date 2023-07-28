@@ -77,7 +77,7 @@ public class WeatherFragment extends Fragment {
     }
 
     public void getWeathers(LatLng latLng) {
-        String key = BuildConfig.KEY;
+        String key = BuildConfig.WEATHERKEY;
         String urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
         String json = "";
         StringBuilder sb = new StringBuilder();
@@ -244,7 +244,7 @@ public class WeatherFragment extends Fragment {
     }
 
     public void searchLocation(View view){
-        String key = BuildConfig.KEY;
+        String key = BuildConfig.WEATHERKEY;
         EditText editText = view.findViewById(R.id.search_text);
         String pName = editText.getText().toString();
         String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;

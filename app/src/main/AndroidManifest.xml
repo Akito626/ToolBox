@@ -11,20 +11,24 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
 
     <application
-        android:hardwareAccelerated="true"
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToolBox"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ColorPickerActivity"
+            android:label="@string/colorpicker_title"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -39,72 +43,50 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
-            android:name="com.alha_app.toolbox.CalcActivity"
+            android:name=".CalcActivity"
             android:label="@string/calcactivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.CounterActivity"
+            android:name=".CounterActivity"
             android:label="@string/counteractivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.StopwatchActivity"
+            android:name=".StopwatchActivity"
             android:label="@string/stopwatchactivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.TimerActivity"
+            android:name=".TimerActivity"
             android:label="@string/timeractivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.MusicListActivity"
+            android:name=".MusicListActivity"
             android:label="@string/musiclistactivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.ClockActivity"
+            android:name=".ClockActivity"
             android:label="@string/clockactivity_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.ClockMenuActivity"
+            android:name=".ClockMenuActivity"
             android:label="@string/clockmenu_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.QRScannerActivity"
+            android:name=".QRScannerActivity"
             android:label="@string/qrscanner_title"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.alha_app.toolbox.WeatherActivity"
+            android:name=".WeatherActivity"
             android:label="@string/weather_title"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
-            android:name="com.alha_app.toolbox.TranslatorActivity"
+            android:name=".TranslatorActivity"
             android:label="@string/translator_title"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" />
-
     </application>
 
 </manifest>
