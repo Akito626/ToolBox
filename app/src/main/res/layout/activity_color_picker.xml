@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ColorPickerActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/color_picker_main_layout">
 
     <Space
         android:layout_width="match_parent"
@@ -48,6 +49,7 @@
                 android:layout_weight="0.6"
                 android:textSize="25dp"
                 android:text="255, 0, 0"
+                android:inputType="text"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
@@ -83,6 +85,7 @@
                 android:layout_weight="0.6"
                 android:textSize="25dp"
                 android:text="#ff0000"
+                android:inputType="text"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
@@ -111,6 +114,7 @@
                 android:layout_weight="0.6"
                 android:textSize="20dp"
                 android:text="0%, 100%, 100%, 0%"
+                android:inputType="text"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
@@ -146,6 +150,7 @@
                 android:layout_weight="0.6"
                 android:textSize="25dp"
                 android:text="0°, 100%, 100%"
+                android:inputType="text"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000" />
@@ -174,6 +179,7 @@
                 android:layout_weight="0.6"
                 android:textSize="25dp"
                 android:text="0°, 100%, 50%"
+                android:inputType="text"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000" />

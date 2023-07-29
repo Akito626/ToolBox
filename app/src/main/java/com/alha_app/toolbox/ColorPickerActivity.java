@@ -3,6 +3,7 @@ package com.alha_app.toolbox;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
 import android.graphics.drawable.ColorDrawable;
@@ -14,7 +15,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -217,6 +220,7 @@ public class ColorPickerActivity extends AppCompatActivity {
             }
         });
 
+        // hslを入力した時のイベント
         hslText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -226,11 +230,11 @@ public class ColorPickerActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence str, int start, int before, int count) {
                 if(hslText.hasFocus()){
+                    String[] hslStr = str.toString().replaceAll(" ", "").replaceAll("%", "").replaceAll("°", "").split(",");
+                    if(hslStr.length != 3) return;
                     double h = 0;
                     double s = 0;
                     double l = 0;
-                    String[] hslStr = str.toString().replaceAll(" ", "").replaceAll("%", "").replaceAll("°", "").split(",");
-                    if(hslStr.length != 3) return;
                     Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
                     if(pattern.matcher(hslStr[0]).matches()){
                         if(Integer.parseInt(hslStr[0]) > 100 || Integer.parseInt(hslStr[0]) < 0) return;
@@ -260,9 +264,20 @@ public class ColorPickerActivity extends AppCompatActivity {
             }
         });
 
+        // 仮想キーボードとメインレイアウトを取得
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        LinearLayout mainLayout = findViewById(R.id.color_picker_main_layout);
+
         // カラーピッカーの準備
         colorPicker.setColor(Color.rgb(255, 0, 0));     // デフォルトカラー
         colorPicker.setOnColorChangedListener(newColor -> {
+            imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);       // カラーピッカーを押したときに仮想キーボードを隠す
+            // フォーカスをは外す
+            rgbText.clearFocus();
+            hexText.clearFocus();
+            cmykText.clearFocus();
+            hsvText.clearFocus();
+            hslText.clearFocus();
             nowColor.setBackgroundColor(newColor);
             r = (newColor >> 16) & 0xff;
             g = (newColor >>  8) & 0xff;
@@ -306,6 +321,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         hexText.setText("#" + hr + hg + hb);
     }
 
+    // hexからrgbに変換
     private void hexToRGB(String hr, String hg, String hb){
         r = Integer.parseInt(hr, 16);
         g = Integer.parseInt(hg, 16);
@@ -332,7 +348,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         cmykText.setText((int) Math.round(c) + "%, " + (int) Math.round(m) + "%, " + (int) Math.round(y) + "%, " + (int) Math.round(k) + "%");
     }
 
-    // cmykからrgbに変換して色を返す
+    // cmykからrgbに変換
     private void cmykToRGB(double c, double m, double y, double k){
         k /= 100;
         double cmykR = -(c / 100 * (1 - k)) + 1 - k;
@@ -372,6 +388,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         hsvText.setText((int) Math.round(h) + "°, " + (int) Math.round(s) + "%, " + (int) Math.round(v) + "%");
     }
 
+    // hsvからrgmに変換
     private void hsvToRGB(double h, double s, double v){
         double max = v / 100 * 255;
         double min = max - ((s / 100) * max);
@@ -443,6 +460,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         hslText.setText((int) Math.round(h) + "°, " + (int) Math.round(s) + "%, " + (int) Math.round(l) + "%");
     }
 
+    // hslからrgbに変換
     private void hslToRGB(double h, double s, double l){
         double max;
         double min;
