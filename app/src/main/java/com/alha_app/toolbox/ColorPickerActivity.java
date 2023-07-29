@@ -30,6 +30,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         TextView rgbText = findViewById(R.id.rgb_text);
+        TextView hexText = findViewById(R.id.hex_text);
         View nowColor = findViewById(R.id.now_color);
         ColorPickerView colorPicker = findViewById(R.id.color_picker);
         colorPicker.setOnColorChangedListener(newColor -> {
@@ -38,6 +39,14 @@ public class ColorPickerActivity extends AppCompatActivity {
             int g = (newColor >>  8) & 0xff;
             int b = (newColor      ) & 0xff;
             rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
+            String hr = Integer.toHexString(r);
+            String hg = Integer.toHexString(g);
+            String hb = Integer.toHexString(b);
+            System.out.println(hr.length());
+            if(hr.length() == 1) hr = 0+hr;
+            if(hg.length() == 1) hg = 0+hg;
+            if(hb.length() == 1) hb = 0+hb;
+            hexText.setText("#" + hr + hg + hb);
         });
     }
 
