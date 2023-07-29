@@ -41,6 +41,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         EditText hexText = findViewById(R.id.hex_text);
         EditText cmykText = findViewById(R.id.cmyk_text);
         EditText hsvText = findViewById(R.id.hsv_text);
+        EditText hslText = findViewById(R.id.hsl_text);
         View nowColor = findViewById(R.id.now_color);
         ColorPickerView colorPicker = findViewById(R.id.color_picker);
 
@@ -75,9 +76,10 @@ public class ColorPickerActivity extends AppCompatActivity {
                     int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
-                    rgbToHEX(r, g, b);
-                    rgbToCMYK(r, g, b);
-                    rgbToHSV(r, g, b);
+                    rgbToHEX();
+                    rgbToCMYK();
+                    rgbToHSV();
+                    rgbToHSL();
                 }
             }
 
@@ -111,8 +113,9 @@ public class ColorPickerActivity extends AppCompatActivity {
                     int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
-                    rgbToCMYK(r, g, b);
-                    rgbToHSV(r, g, b);
+                    rgbToCMYK();
+                    rgbToHSV();
+                    rgbToHSL();
                 }
             }
 
@@ -159,8 +162,9 @@ public class ColorPickerActivity extends AppCompatActivity {
                     int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
-                    rgbToHEX(r, g, b);
-                    rgbToHSV(r, g, b);
+                    rgbToHEX();
+                    rgbToHSV();
+                    rgbToHSL();
                 }
             }
             @Override
@@ -201,8 +205,52 @@ public class ColorPickerActivity extends AppCompatActivity {
                     int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
-                    rgbToHEX(r, g, b);
-                    rgbToCMYK(r, g, b);
+                    rgbToHEX();
+                    rgbToCMYK();
+                    rgbToHSL();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        hslText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence str, int start, int before, int count) {
+                if(hslText.hasFocus()){
+                    double h = 0;
+                    double s = 0;
+                    double l = 0;
+                    String[] hslStr = str.toString().replaceAll(" ", "").replaceAll("%", "").replaceAll("°", "").split(",");
+                    if(hslStr.length != 3) return;
+                    Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
+                    if(pattern.matcher(hslStr[0]).matches()){
+                        if(Integer.parseInt(hslStr[0]) > 100 || Integer.parseInt(hslStr[0]) < 0) return;
+                        h = Integer.parseInt(hslStr[0]);
+                    }
+                    if(pattern.matcher(hslStr[1]).matches()){
+                        if(Integer.parseInt(hslStr[1]) > 100 || Integer.parseInt(hslStr[1]) < 0) return;
+                        s = Integer.parseInt(hslStr[1]);
+                    }
+                    if(pattern.matcher(hslStr[2]).matches()){
+                        if(Integer.parseInt(hslStr[2]) > 100 || Integer.parseInt(hslStr[2]) < 0) return;
+                        l = Integer.parseInt(hslStr[2]);
+                    }
+                    hslToRGB(h, s, l);
+                    int color = Color.rgb(r, g, b);
+                    colorPicker.setColor(color);
+                    nowColor.setBackgroundColor(color);
+                    rgbToHEX();
+                    rgbToCMYK();
+                    rgbToHSV();
                 }
             }
 
@@ -220,9 +268,10 @@ public class ColorPickerActivity extends AppCompatActivity {
             g = (newColor >>  8) & 0xff;
             b = (newColor      ) & 0xff;
             rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
-            rgbToHEX(r, g, b);
-            rgbToCMYK(r, g, b);
-            rgbToHSV(r, g, b);
+            rgbToHEX();
+            rgbToCMYK();
+            rgbToHSV();
+            rgbToHSL();
         });
     }
 
@@ -245,7 +294,7 @@ public class ColorPickerActivity extends AppCompatActivity {
     }
 
     // rgbからhexに変換して表示
-    private void rgbToHEX(int r, int g, int b){
+    private void rgbToHEX(){
         String hr = Integer.toHexString(r);
         String hg = Integer.toHexString(g);
         String hb = Integer.toHexString(b);
@@ -267,7 +316,7 @@ public class ColorPickerActivity extends AppCompatActivity {
     }
 
     // rgbからcmykに変換して表示
-    private void rgbToCMYK(int r, int g, int b){
+    private void rgbToCMYK(){
         double cmykR = (double) r / 255;
         double cmykG = (double) g / 255;
         double cmykB = (double) b / 255;
@@ -299,7 +348,7 @@ public class ColorPickerActivity extends AppCompatActivity {
     }
 
     // rgbからhsvに変換してhsvを表示
-    private void rgbToHSV(int r, int g, int b){
+    private void rgbToHSV(){
         double max = max3(r, g, b);
         double min = min3(r, g, b);
 
@@ -320,7 +369,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         double v = max / 255 * 100;
 
         EditText hsvText = findViewById(R.id.hsv_text);
-        hsvText.setText((int) h + "°, " + (int) s + "%, " + (int) v + "%");
+        hsvText.setText((int) Math.round(h) + "°, " + (int) Math.round(s) + "%, " + (int) Math.round(v) + "%");
     }
 
     private void hsvToRGB(double h, double s, double v){
@@ -329,28 +378,106 @@ public class ColorPickerActivity extends AppCompatActivity {
 
         if(h <= 60){
             r = (int) Math.round(max);
-            g = (int) Math.round(((h / 100 * 255 / 60) * (max - min) + min));
+            g = (int) Math.round((h / 60) * (max - min) + min);
             b = (int) Math.round(min);
         } else if(h <= 120){
-            r = (int) Math.round((((120 - h / 100 * 255) * (max - min) + min)));
+            r = (int) Math.round(((120 - h) / 60) * (max - min) + min);
             g = (int) Math.round(max);
             b = (int) Math.round(min);
         } else if(h <= 180){
             r = (int) Math.round(min);
             g = (int) Math.round(max);
-            b = (int) Math.round((((h / 100 * 255 - 120) / 60 * (max - min) + min)));
+            b = (int) Math.round((h - 120) / 60 * (max - min) + min);
         } else if(h <= 240){
             r = (int) Math.round(min);
-            g = (int) Math.round(((240 - h / 100 * 255) / 60 * (max - min) + min));
+            g = (int) Math.round((240 - h) / 60 * (max - min) + min);
             b = (int) Math.round(max);
         } else if(h <= 300){
-            r = (int) Math.round(((h / 100 * 255 - 240) / 60 * (max - min) + min));
+            r = (int) Math.round((h - 240) / 60 * (max - min) + min);
             g = (int) Math.round(min);
             b = (int) Math.round(max);
         } else {
             r = (int) Math.round(max);
             g = (int) Math.round(min);
-            b = (int) Math.round(((360 - h / 100 * 255) / 60 * (max - min) + min));
+            b = (int) Math.round((360 - h) / 60 * (max - min) + min);
+        }
+
+        EditText rgbText = findViewById(R.id.rgb_text);
+        rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
+    }
+
+    // rgbからhslに変換して表示
+    private void rgbToHSL(){
+        double max = max3(r, g, b);
+        double min = min3(r, g, b);
+
+        double h = 0;
+        if(r == g && g == b){
+            h = 0;
+        } else if(r == max){
+            h = 60 * ((g - b) / (max - min));
+            if(h < 0){
+                h = 360 + h;
+            }
+        } else if(g == max){
+            h = 60 * ((b - r) / (max - min)) + 120;
+        } else if(b == max){
+            h = 60 * ((r - g) / (max - min)) + 240;
+        }
+
+        // 収束値を求め、彩度を求める
+        double cnt = (max + min) / 2;
+        double s;
+        if(cnt <= 127){
+            s = (cnt - min) / cnt;
+        } else {
+            cnt = 255 - cnt;
+            s = (max - cnt) / (255 - cnt);
+        }
+        s *= 100;
+
+        // 輝度を求める
+        double l = (max + min) / 2 / 255 * 100;
+
+        EditText hslText = findViewById(R.id.hsl_text);
+        hslText.setText((int) Math.round(h) + "°, " + (int) Math.round(s) + "%, " + (int) Math.round(l) + "%");
+    }
+
+    private void hslToRGB(double h, double s, double l){
+        double max;
+        double min;
+        if(l <= 49){
+            max = 2.55 * (l + l * (s / 100));
+            min = 2.55 * (l - l * (s / 100));
+        } else {
+            max = 2.55 * (l + (100 - l) * (s / 100));
+            min = 2.55 * (l - (100 - l) * (s / 100));
+        }
+
+        if(h <= 60){
+            r = (int) Math.round(max);
+            g = (int) Math.round((h / 60) * (max - min) + min);
+            b = (int) Math.round(min);
+        } else if(h <= 120){
+            r = (int) Math.round(((120 - h) / 60) * (max - min) + min);
+            g = (int) Math.round(max);
+            b = (int) Math.round(min);
+        } else if(h <= 180){
+            r = (int) Math.round(min);
+            g = (int) Math.round(max);
+            b = (int) Math.round((h - 120) / 60 * (max - min) + min);
+        } else if(h <= 240){
+            r = (int) Math.round(min);
+            g = (int) Math.round((240 - h) / 60 * (max - min) + min);
+            b = (int) Math.round(max);
+        } else if(h <= 300){
+            r = (int) Math.round((h - 240) / 60 * (max - min) + min);
+            g = (int) Math.round(min);
+            b = (int) Math.round(max);
+        } else {
+            r = (int) Math.round(max);
+            g = (int) Math.round(min);
+            b = (int) Math.round((360 - h) / 60 * (max - min) + min);
         }
 
         EditText rgbText = findViewById(R.id.rgb_text);
