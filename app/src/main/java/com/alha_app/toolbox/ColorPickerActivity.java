@@ -39,8 +39,11 @@ public class ColorPickerActivity extends AppCompatActivity {
 
         EditText rgbText = findViewById(R.id.rgb_text);
         TextView hexText = findViewById(R.id.hex_text);
+        EditText cmykText = findViewById(R.id.cmyk_text);
         View nowColor = findViewById(R.id.now_color);
         ColorPickerView colorPicker = findViewById(R.id.color_picker);
+
+        // rgbを入力した時のイベント
         rgbText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,6 +81,54 @@ public class ColorPickerActivity extends AppCompatActivity {
 
             }
         });
+
+        // cmykを入力した時のイベント
+        cmykText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(cmykText.hasFocus()){
+                    double c = 0;
+                    double m = 0;
+                    double y = 0;
+                    double k = 0;
+                    String[] cmykStr = s.toString().replaceAll(" ", "").replaceAll(",", "").split("%");
+                    if(cmykStr.length != 4) return;
+                    Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
+                    if(pattern.matcher(cmykStr[0]).matches()){
+                        if(Integer.parseInt(cmykStr[0]) > 100) return;
+                        c = Integer.parseInt(cmykStr[0]);
+                    }
+                    if(pattern.matcher(cmykStr[1]).matches()){
+                        if(Integer.parseInt(cmykStr[1]) > 100) return;
+                        m = Integer.parseInt(cmykStr[1]);
+                    }
+                    if(pattern.matcher(cmykStr[2]).matches()){
+                        if(Integer.parseInt(cmykStr[2]) > 100) return;
+                        y = Integer.parseInt(cmykStr[2]);
+                    }
+                    if(pattern.matcher(cmykStr[3]).matches()){
+                        if(Integer.parseInt(cmykStr[3]) > 100) return;
+                        k = Integer.parseInt(cmykStr[3]);
+                    }
+                    int color = cmykToRGB(c, m, y, k);
+                    colorPicker.setColor(color);
+                    nowColor.setBackgroundColor(color);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // カラーピッカーの準備
+        colorPicker.setColor(Color.rgb(255, 0, 0));     // デフォルトカラー
         colorPicker.setOnColorChangedListener(newColor -> {
             nowColor.setBackgroundColor(newColor);
             r = (newColor >> 16) & 0xff;
@@ -129,7 +180,26 @@ public class ColorPickerActivity extends AppCompatActivity {
         double y = (1 - cmykB - k) / (1 - k) * 100;
         k *= 100;
 
-        TextView cmykText = findViewById(R.id.cmyk_text);
+        EditText cmykText = findViewById(R.id.cmyk_text);
         cmykText.setText((int)c + "%, " + (int)m + "%, " + (int)y + "%, " + (int)k + "%");
+    }
+
+    // cmykからrgbに変換して色を返す
+    private int cmykToRGB(double c, double m, double y, double k){
+        k /= 100;
+        double cmykR = -(c / 100 * (1 - k)) + 1 - k;
+        double cmykG = -(m / 100 * (1 - k)) + 1 - k;
+        double cmykB = -(y / 100 * (1 - k)) + 1 - k;
+
+        double r = cmykR * 255;
+        double g = cmykG * 255;
+        double b = cmykB * 255;
+
+        int color = Color.rgb((int) Math.round(r), (int) Math.round(g), (int) Math.round(b));
+
+        EditText rgbText = findViewById(R.id.rgb_text);
+        rgbText.setText(String.format("%3d, %3d, %3d", (int) Math.round(r), (int) Math.round(g), (int) Math.round(b)));
+
+        return color;
     }
 }
