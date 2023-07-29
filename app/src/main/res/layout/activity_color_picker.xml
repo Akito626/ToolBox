@@ -145,7 +145,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
                 android:textSize="30dp"
-                android:text="0%, 100%, 100%"
+                android:text="0°, 100%, 100%"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000" />
@@ -173,6 +173,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
                 android:textSize="30dp"
+                android:text="0°, 100%, 50%"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000" />
