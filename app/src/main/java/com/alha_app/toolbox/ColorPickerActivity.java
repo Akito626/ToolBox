@@ -47,6 +47,8 @@ public class ColorPickerActivity extends AppCompatActivity {
             if(hg.length() == 1) hg = 0+hg;
             if(hb.length() == 1) hb = 0+hb;
             hexText.setText("#" + hr + hg + hb);
+
+            rgbToCMYK(r, g, b);
         });
     }
 
@@ -66,5 +68,24 @@ public class ColorPickerActivity extends AppCompatActivity {
                 break;
         }
         return result;
+    }
+
+    // rgbからcmykに変換して表示
+    private void rgbToCMYK(int r, int g, int b){
+        double cmykR = (double) r / 255;
+        double cmykG = (double) g / 255;
+        double cmykB = (double) b / 255;
+
+        double max;
+        max = Math.max(cmykR, cmykG);
+        max = Math.max(max, cmykB);
+        double k = 1 - max;
+        double c = (1 - cmykR - k) / (1 - k) * 100;
+        double m = (1 - cmykG - k) / (1 - k) * 100;
+        double y = (1 - cmykB - k) / (1 - k) * 100;
+        k *= 100;
+
+        TextView cmykText = findViewById(R.id.cmyk_text);
+        cmykText.setText((int)c + "%, " + (int)m + "%, " + (int)y + "%, " + (int)k + "%");
     }
 }
