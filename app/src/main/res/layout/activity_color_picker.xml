@@ -22,7 +22,8 @@
             android:id="@+id/now_color"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.5"
+            android:background="#ff0000"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -46,6 +47,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
                 android:textSize="30dp"
+                android:text="255, 0, 0"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
@@ -80,6 +82,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
                 android:textSize="30dp"
+                android:text="#ff0000"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
@@ -107,6 +110,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
                 android:textSize="30dp"
+                android:text="0%, 100%, 100%, 0%"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
                 android:background="#00000000"/>
