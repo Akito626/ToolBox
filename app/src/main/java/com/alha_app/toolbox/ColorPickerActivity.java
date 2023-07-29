@@ -139,7 +139,7 @@ public class ColorPickerActivity extends AppCompatActivity {
                     double m = 0;
                     double y = 0;
                     double k = 0;
-                    String[] cmykStr = s.toString().replaceAll(" ", "").replaceAll(",", "").split("%");
+                    String[] cmykStr = s.toString().replaceAll(" ", "").replaceAll("%", "").split(",");
                     if(cmykStr.length != 4) return;
                     Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
                     if(pattern.matcher(cmykStr[0]).matches()){
@@ -339,9 +339,9 @@ public class ColorPickerActivity extends AppCompatActivity {
         double cmykG = -(m / 100 * (1 - k)) + 1 - k;
         double cmykB = -(y / 100 * (1 - k)) + 1 - k;
 
-        r = (int) cmykR * 255;
-        g = (int) cmykG * 255;
-        b = (int) cmykB * 255;
+        r = (int) Math.round(cmykR * 255);
+        g = (int) Math.round(cmykG * 255);
+        b = (int) Math.round(cmykB * 255);
 
         EditText rgbText = findViewById(R.id.rgb_text);
         rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
