@@ -38,7 +38,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         EditText rgbText = findViewById(R.id.rgb_text);
-        TextView hexText = findViewById(R.id.hex_text);
+        EditText hexText = findViewById(R.id.hex_text);
         EditText cmykText = findViewById(R.id.cmyk_text);
         EditText hsvText = findViewById(R.id.hsv_text);
         View nowColor = findViewById(R.id.now_color);
@@ -72,8 +72,47 @@ public class ColorPickerActivity extends AppCompatActivity {
                     } else {
                         b = 0;
                     }
-                    colorPicker.setColor(Color.rgb(r, g, b));
-                    nowColor.setBackgroundColor(Color.rgb(r, g, b));
+                    int color = Color.rgb(r, g, b);
+                    colorPicker.setColor(color);
+                    nowColor.setBackgroundColor(color);
+                    rgbToHEX(r, g, b);
+                    rgbToCMYK(r, g, b);
+                    rgbToHSV(r, g, b);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // hexを入力した時のイベント
+        hexText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(hexText.hasFocus()){
+                    String hexStr = s.toString().replaceAll("#", "");
+                    if(hexStr.length() != 6) return;
+                    String hr = hexStr.substring(0, 2);
+                    String hg = hexStr.substring(2, 4);
+                    String hb = hexStr.substring(4, 6);
+                    Pattern pattern = Pattern.compile("[0-9a-fA-F]+");
+                    if(!pattern.matcher(hr).matches()) return;
+                    if(!pattern.matcher(hg).matches()) return;
+                    if(!pattern.matcher(hb).matches()) return;
+
+                    hexToRGB(hr, hg, hb);
+                    int color = Color.rgb(r, g, b);
+                    colorPicker.setColor(color);
+                    nowColor.setBackgroundColor(color);
+                    rgbToCMYK(r, g, b);
+                    rgbToHSV(r, g, b);
                 }
             }
 
@@ -116,9 +155,12 @@ public class ColorPickerActivity extends AppCompatActivity {
                         if(Integer.parseInt(cmykStr[3]) > 100 || Integer.parseInt(cmykStr[3]) < 0) return;
                         k = Integer.parseInt(cmykStr[3]);
                     }
-                    int color = cmykToRGB(c, m, y, k);
+                    cmykToRGB(c, m, y, k);
+                    int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
+                    rgbToHEX(r, g, b);
+                    rgbToHSV(r, g, b);
                 }
             }
             @Override
@@ -127,6 +169,7 @@ public class ColorPickerActivity extends AppCompatActivity {
             }
         });
 
+        // hsvを入力したときのイベント
         hsvText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,26 +177,32 @@ public class ColorPickerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence str, int start, int before, int count) {
                 if(hsvText.hasFocus()){
-                    String[] hsvStr = s.toString().replaceAll(" ", "").replaceAll("%", "").replaceAll("°", "").split(",");
+                    double h = 0;
+                    double s = 0;
+                    double v = 0;
+                    String[] hsvStr = str.toString().replaceAll(" ", "").replaceAll("%", "").replaceAll("°", "").split(",");
                     if(hsvStr.length != 3) return;
                     Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
                     if(pattern.matcher(hsvStr[0]).matches()){
                         if(Integer.parseInt(hsvStr[0]) > 100 || Integer.parseInt(hsvStr[0]) < 0) return;
-                        r = Integer.parseInt(hsvStr[0]);
+                        h = Integer.parseInt(hsvStr[0]);
                     }
                     if(pattern.matcher(hsvStr[1]).matches()){
                         if(Integer.parseInt(hsvStr[1]) > 100 || Integer.parseInt(hsvStr[1]) < 0) return;
-                        g = Integer.parseInt(hsvStr[1]);
+                        s = Integer.parseInt(hsvStr[1]);
                     }
                     if(pattern.matcher(hsvStr[2]).matches()){
                         if(Integer.parseInt(hsvStr[2]) > 100 || Integer.parseInt(hsvStr[2]) < 0) return;
-                        b = Integer.parseInt(hsvStr[2]);
+                        v = Integer.parseInt(hsvStr[2]);
                     }
-                    int color = hsvToRGB(r, g, b);
+                    hsvToRGB(h, s, v);
+                    int color = Color.rgb(r, g, b);
                     colorPicker.setColor(color);
                     nowColor.setBackgroundColor(color);
+                    rgbToHEX(r, g, b);
+                    rgbToCMYK(r, g, b);
                 }
             }
 
@@ -171,14 +220,7 @@ public class ColorPickerActivity extends AppCompatActivity {
             g = (newColor >>  8) & 0xff;
             b = (newColor      ) & 0xff;
             rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
-            String hr = Integer.toHexString(r);
-            String hg = Integer.toHexString(g);
-            String hb = Integer.toHexString(b);
-            if(hr.length() == 1) hr = 0+hr;
-            if(hg.length() == 1) hg = 0+hg;
-            if(hb.length() == 1) hb = 0+hb;
-            hexText.setText("#" + hr + hg + hb);
-
+            rgbToHEX(r, g, b);
             rgbToCMYK(r, g, b);
             rgbToHSV(r, g, b);
         });
@@ -202,6 +244,28 @@ public class ColorPickerActivity extends AppCompatActivity {
         return result;
     }
 
+    // rgbからhexに変換して表示
+    private void rgbToHEX(int r, int g, int b){
+        String hr = Integer.toHexString(r);
+        String hg = Integer.toHexString(g);
+        String hb = Integer.toHexString(b);
+        if(hr.length() == 1) hr = 0+hr;
+        if(hg.length() == 1) hg = 0+hg;
+        if(hb.length() == 1) hb = 0+hb;
+
+        EditText hexText = findViewById(R.id.hex_text);
+        hexText.setText("#" + hr + hg + hb);
+    }
+
+    private void hexToRGB(String hr, String hg, String hb){
+        r = Integer.parseInt(hr, 16);
+        g = Integer.parseInt(hg, 16);
+        b = Integer.parseInt(hb, 16);
+
+        EditText rgbText = findViewById(R.id.rgb_text);
+        rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
+    }
+
     // rgbからcmykに変換して表示
     private void rgbToCMYK(int r, int g, int b){
         double cmykR = (double) r / 255;
@@ -220,22 +284,18 @@ public class ColorPickerActivity extends AppCompatActivity {
     }
 
     // cmykからrgbに変換して色を返す
-    private int cmykToRGB(double c, double m, double y, double k){
+    private void cmykToRGB(double c, double m, double y, double k){
         k /= 100;
         double cmykR = -(c / 100 * (1 - k)) + 1 - k;
         double cmykG = -(m / 100 * (1 - k)) + 1 - k;
         double cmykB = -(y / 100 * (1 - k)) + 1 - k;
 
-        double r = cmykR * 255;
-        double g = cmykG * 255;
-        double b = cmykB * 255;
-
-        int color = Color.rgb((int) Math.round(r), (int) Math.round(g), (int) Math.round(b));
+        r = (int) cmykR * 255;
+        g = (int) cmykG * 255;
+        b = (int) cmykB * 255;
 
         EditText rgbText = findViewById(R.id.rgb_text);
-        rgbText.setText(String.format("%3d, %3d, %3d", (int) Math.round(r), (int) Math.round(g), (int) Math.round(b)));
-
-        return color;
+        rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
     }
 
     // rgbからhsvに変換してhsvを表示
@@ -263,13 +323,9 @@ public class ColorPickerActivity extends AppCompatActivity {
         hsvText.setText((int) h + "°, " + (int) s + "%, " + (int) v + "%");
     }
 
-    private int hsvToRGB(double h, double s, double v){
+    private void hsvToRGB(double h, double s, double v){
         double max = v / 100 * 255;
         double min = max - ((s / 100) * max);
-
-        int r;
-        int g;
-        int b;
 
         if(h <= 60){
             r = (int) Math.round(max);
@@ -299,9 +355,6 @@ public class ColorPickerActivity extends AppCompatActivity {
 
         EditText rgbText = findViewById(R.id.rgb_text);
         rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
-
-        int color = Color.rgb(r, g, b);
-        return color;
     }
 
     private double max3(double num1, double num2, double num3){
