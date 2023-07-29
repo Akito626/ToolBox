@@ -9,8 +9,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.PatternMatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -18,8 +22,12 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerView;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class ColorPickerActivity extends AppCompatActivity {
+    private int r;
+    private int g;
+    private int b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +37,56 @@ public class ColorPickerActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
-        TextView rgbText = findViewById(R.id.rgb_text);
+        EditText rgbText = findViewById(R.id.rgb_text);
         TextView hexText = findViewById(R.id.hex_text);
         View nowColor = findViewById(R.id.now_color);
         ColorPickerView colorPicker = findViewById(R.id.color_picker);
+        rgbText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(rgbText.hasFocus()){
+                    String[] rgbStr = s.toString().replaceAll(" ", "").split(",");
+                    if(rgbStr.length != 3) return;
+                    Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
+                    if(pattern.matcher(rgbStr[0]).matches()){
+                        r = Integer.parseInt(rgbStr[0]);
+                    } else {
+                        r = 0;
+                    }
+                    if(pattern.matcher(rgbStr[1]).matches()){
+                        g = Integer.parseInt(rgbStr[1]);
+                    } else {
+                        g = 0;
+                    }
+                    if(pattern.matcher(rgbStr[2]).matches()){
+                        b = Integer.parseInt(rgbStr[2]);
+                    } else {
+                        b = 0;
+                    }
+                    colorPicker.setColor(Color.rgb(r, g, b));
+                    nowColor.setBackgroundColor(Color.rgb(r, g, b));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         colorPicker.setOnColorChangedListener(newColor -> {
             nowColor.setBackgroundColor(newColor);
-            int r = (newColor >> 16) & 0xff;
-            int g = (newColor >>  8) & 0xff;
-            int b = (newColor      ) & 0xff;
+            r = (newColor >> 16) & 0xff;
+            g = (newColor >>  8) & 0xff;
+            b = (newColor      ) & 0xff;
             rgbText.setText(String.format("%3d, %3d, %3d", r, g, b));
             String hr = Integer.toHexString(r);
             String hg = Integer.toHexString(g);
             String hb = Integer.toHexString(b);
-            System.out.println(hr.length());
             if(hr.length() == 1) hr = 0+hr;
             if(hg.length() == 1) hg = 0+hg;
             if(hb.length() == 1) hb = 0+hb;

@@ -40,14 +40,15 @@
                 android:gravity="left|center_vertical"
                 android:layout_marginStart="5dp"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/rgb_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
-                android:autoSizeTextType="uniform"
+                android:textSize="30dp"
                 android:gravity="center"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="5dp"
+                android:background="#00000000"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -73,14 +74,15 @@
                 android:gravity="left|center_vertical"
                 android:layout_marginStart="5dp"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/hex_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
-                android:autoSizeTextType="uniform"
+                android:textSize="30dp"
                 android:gravity="center"
-                android:layout_marginStart="5dp"/>
+                android:layout_marginStart="5dp"
+                android:background="#00000000"/>
         </LinearLayout>
 
         <LinearLayout
@@ -99,14 +101,15 @@
                 android:gravity="left|center_vertical"
                 android:layout_marginStart="5dp"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/cmyk_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
-                android:autoSizeTextType="uniform"
+                android:textSize="30dp"
                 android:gravity="center"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="5dp"
+                android:background="#00000000"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -132,14 +135,15 @@
                 android:gravity="left|center_vertical"
                 android:layout_marginStart="5dp"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/hsv_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
-                android:autoSizeTextType="uniform"
+                android:textSize="30dp"
                 android:gravity="center"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="5dp"
+                android:background="#00000000" />
         </LinearLayout>
 
         <LinearLayout
@@ -158,14 +162,15 @@
                 android:gravity="left|center_vertical"
                 android:layout_marginStart="5dp"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/hsl_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.6"
-                android:autoSizeTextType="uniform"
+                android:textSize="30dp"
                 android:gravity="center"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="5dp"
+                android:background="#00000000" />
         </LinearLayout>
     </LinearLayout>
 
