@@ -329,7 +329,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         k *= 100;
 
         EditText cmykText = findViewById(R.id.cmyk_text);
-        cmykText.setText((int)c + "%, " + (int)m + "%, " + (int)y + "%, " + (int)k + "%");
+        cmykText.setText((int) Math.round(c) + "%, " + (int) Math.round(m) + "%, " + (int) Math.round(y) + "%, " + (int) Math.round(k) + "%");
     }
 
     // cmykからrgbに変換して色を返す
