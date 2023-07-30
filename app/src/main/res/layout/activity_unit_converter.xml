@@ -128,14 +128,14 @@
             android:layout_weight="0.35"/>
 
         <Button
-            android:id="@+id/check_button"
+            android:id="@+id/calc_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:backgroundTint="#afafb0"
             android:textSize="20dp"
             android:inputType="text"
-            android:text="Check"
+            android:text="Calc"
             android:textColor="@color/black"/>
 
         <Space
@@ -145,6 +145,7 @@
     </LinearLayout>
 
     <ListView
+        android:id="@+id/unit_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6"/>
