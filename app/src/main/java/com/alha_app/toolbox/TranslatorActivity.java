@@ -110,6 +110,7 @@ public class TranslatorActivity extends AppCompatActivity {
         // 戻るボタンを追加
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(actionBar).setTitle("翻訳（みんなの自動翻訳＠TexTra）");
 
         handler = new Handler();
         originalText = findViewById(R.id.original_text);
