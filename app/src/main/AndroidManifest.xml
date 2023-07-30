@@ -26,9 +26,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".UnitConverterActivity"
+            android:label="@string/unitconverter_title"
+            android:exported="false" />
+        <activity
             android:name=".ColorPickerActivity"
             android:label="@string/colorpicker_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -46,45 +50,45 @@
         <activity
             android:name=".CalcActivity"
             android:label="@string/calcactivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CounterActivity"
             android:label="@string/counteractivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StopwatchActivity"
             android:label="@string/stopwatchactivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TimerActivity"
             android:label="@string/timeractivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MusicListActivity"
             android:label="@string/musiclistactivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ClockActivity"
             android:label="@string/clockactivity_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ClockMenuActivity"
             android:label="@string/clockmenu_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".QRScannerActivity"
             android:label="@string/qrscanner_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".WeatherActivity"
             android:label="@string/weather_title"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".TranslatorActivity"
             android:label="@string/translator_title"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" />
     </application>

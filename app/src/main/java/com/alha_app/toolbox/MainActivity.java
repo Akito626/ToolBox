@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         star = R.drawable.star;
 
         // 画像初期化
-        int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette};
+        int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer, R.drawable.clock,
+                R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette, R.drawable.ruler};
         images = new int[tools.length];
 
         for(int i = 0; i < tools.length; i++){
@@ -154,10 +154,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepareList(){
-//        int [] images = {
-//                R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer,
-//                R.drawable.clock, R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather};
-
         listData.clear();
         for (int i=0; i < tools.length; i++) {
             Map<String, Object> item = new HashMap<>();
@@ -172,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // お気に入りに追加したアイテムのリスト
-
     public void prepareFavoriteList(){
         listData.clear();
         for (int i=0; i < tools.length; i++) {
@@ -204,42 +199,37 @@ public class MainActivity extends AppCompatActivity {
             String appname = adapter.getItem(position).toString();
             int index = appname.indexOf("name=");
             appname = appname.substring(index+5, appname.length()-1);
-            Intent intent;
             switch (appname){
                 case "電卓":
-                    intent = new Intent(getApplication(), CalcActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), CalcActivity.class));
                     break;
                 case "カウンター":
-                    intent = new Intent(getApplication(), CounterActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), CounterActivity.class));
                     break;
                 case "ストップウォッチ":
-                    intent = new Intent(getApplication(), StopwatchActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), StopwatchActivity.class));
                     break;
                 case "タイマー":
-                    intent = new Intent(getApplication(), TimerActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), TimerActivity.class));
                     break;
                 case "時計":
-                    intent = new Intent(getApplication(), ClockActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), ClockActivity.class));
                     break;
                 case "QRコードリーダー":
-                    intent = new Intent(getApplication(), QRScannerActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), QRScannerActivity.class));
                     break;
                 case "天気":
-                    intent = new Intent(getApplication(), WeatherActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), WeatherActivity.class));
                     break;
                 case "翻訳":
-                    intent = new Intent(getApplication(), TranslatorActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getApplication(), TranslatorActivity.class));
                     break;
                 case "カラーピッカー":
                     startActivity(new Intent(getApplication(), ColorPickerActivity.class));
+                    break;
+                case "単位変換":
+                    startActivity(new Intent(getApplication(), UnitConverterActivity.class));
+                    break;
             }
         });
 

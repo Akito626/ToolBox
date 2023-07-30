@@ -12,6 +12,7 @@
     <string name="weather_title">天気</string>
     <string name="translator_title">翻訳</string>
     <string name="colorpicker_title">カラーピッカー</string>
+    <string name="unitconverter_title">単位変換</string>
 
     <string-array name="tools">
         <item>電卓</item>
@@ -23,6 +24,7 @@
         <item>天気</item>
         <item>翻訳</item>
         <item>カラーピッカー</item>
+        <item>単位変換</item>
     </string-array>
 
     <string name="calc_0">0</string>
