@@ -1,12 +1,16 @@
 package com.alha_app.toolbox;
 
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -110,7 +114,6 @@ public class TranslatorActivity extends AppCompatActivity {
         // 戻るボタンを追加
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(actionBar).setTitle("翻訳（みんなの自動翻訳＠TexTra）");
 
         handler = new Handler();
         originalText = findViewById(R.id.original_text);
@@ -211,6 +214,32 @@ public class TranslatorActivity extends AppCompatActivity {
             clipboardManager.setPrimaryClip(ClipData.newPlainText("", translatedText.getText().toString()));
             Toast.makeText(this, "クリップボードにコピーしました", Toast.LENGTH_SHORT).show();
         });
+
+        // 許可が取れていなければダイアログを表示
+        SharedPreferences preferences = getSharedPreferences("prefData", MODE_PRIVATE);
+        boolean isPermit = preferences.getBoolean("textraPermit", false);
+        if(!isPermit) {
+            // ダイアログを作成
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.translator_dialog);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+            TextView dialogText = dialog.findViewById(R.id.translator_dialog_text);
+            dialogText.setMovementMethod(new ScrollingMovementMethod());
+
+            Button cancelButton = dialog.findViewById(R.id.translator_cancel_button);
+            cancelButton.setOnClickListener(v -> finish());
+
+            Button agreeButton = dialog.findViewById(R.id.translator_agree_button);
+            agreeButton.setOnClickListener(v -> {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("textraPermit", true);
+                editor.commit();
+                dialog.dismiss();
+            });
+
+            dialog.show();
+        }
     }
 
     @Override
