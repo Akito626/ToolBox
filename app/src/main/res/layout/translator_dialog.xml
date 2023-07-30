@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/translator_dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
+        android:inputType="textMultiLine"
+        android:textSize="20dp"
+        android:text="@string/textra_text"
+        android:layout_margin="10dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+
+        <Button
+            android:id="@+id/translator_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:backgroundTint="#afafb0"
+            android:text="キャンセル"
+            android:textSize="20dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="left|center_vertical"/>
+
+        <Button
+            android:id="@+id/translator_agree_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:backgroundTint="#afafb0"
+            android:text="同意"
+            android:textSize="20dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="right|center_vertical"/>
+    </FrameLayout>
+</LinearLayout>
