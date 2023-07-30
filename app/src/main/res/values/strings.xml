@@ -65,4 +65,47 @@
         <item>zh-CN</item>
         <item>de</item>
     </string-array>
+    
+    <string-array name="unit_type">
+        <item>長さ</item>
+        <item>重さ</item>
+        <item>面積</item>
+        <item>体積・容量</item>
+    </string-array>
+
+    <string-array name="unit_length">
+        <item>μm</item>
+        <item>mm</item>
+        <item>cm</item>
+        <item>m</item>
+        <item>km</item>
+    </string-array>
+
+    <string-array name="unit_weight">
+        <item>μg</item>
+        <item>mg</item>
+        <item>g</item>
+        <item>kg</item>
+        <item>t</item>
+    </string-array>
+    
+    <string-array name="unit_area">
+        <item>mm²</item>
+        <item>cm²</item>
+        <item>m²</item>
+        <item>km²</item>
+        <item>a</item>
+        <item>ha</item>
+    </string-array>
+
+    <string-array name="unit_volume">
+        <item>ml</item>
+        <item>cl</item>
+        <item>dl</item>
+        <item>l</item>
+        <item>kl</item>
+        <item>mm³</item>
+        <item>cm³</item>
+        <item>m³</item>
+    </string-array>
 </resources>

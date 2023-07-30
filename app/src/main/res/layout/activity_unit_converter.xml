@@ -20,7 +20,7 @@
         android:layout_marginStart="10dp">
 
         <Spinner
-            android:id="@+id/unit_kinds_spinner"
+            android:id="@+id/unit_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"/>
