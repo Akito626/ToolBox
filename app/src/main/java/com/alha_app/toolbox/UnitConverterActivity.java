@@ -125,6 +125,7 @@ public class UnitConverterActivity extends AppCompatActivity {
                 listData = calcLength(unit, num);
                 break;
             case 1:
+                listData = calcWeight(unit, num);
                 break;
             case 2:
                 break;
@@ -133,6 +134,11 @@ public class UnitConverterActivity extends AppCompatActivity {
         }
 
         ListView unitList = findViewById(R.id.unit_list);
+        if (listData == null) {
+            unitList.removeAllViews();
+            return;
+        }
+
         unitList.setAdapter(new SimpleAdapter(
                 this,
                 listData,
@@ -142,6 +148,7 @@ public class UnitConverterActivity extends AppCompatActivity {
         ));
     }
 
+    // 長さを変換
     private List<Map<String, Object>> calcLength(String unit, double num){
         List<Map<String, Object>> listData = new ArrayList<>();
         Map<String, Object> item;
@@ -277,6 +284,147 @@ public class UnitConverterActivity extends AppCompatActivity {
                 listData.add(item);
                 break;
         }
+        return listData;
+    }
+
+    // 重さを変換
+    private List<Map<String, Object>> calcWeight(String unit, double num){
+        List<Map<String, Object>> listData = new ArrayList<>();
+        Map<String, Object> item;
+
+        switch (unit){
+            case "μg":
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num).toPlainString());
+                item.put("unit", "μg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000).toPlainString());
+                item.put("unit", "mg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000).toPlainString());
+                item.put("unit", "g");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000000).toPlainString());
+                item.put("unit", "kg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000000000l).toPlainString());
+                item.put("unit", "t");
+                listData.add(item);
+                break;
+            case "mg":
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000).toPlainString());
+                item.put("unit", "μg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num).toPlainString());
+                item.put("unit", "mg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000).toPlainString());
+                item.put("unit", "g");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000).toPlainString());
+                item.put("unit", "kg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000000).toPlainString());
+                item.put("unit", "t");
+                listData.add(item);
+                break;
+            case "g":
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000).toPlainString());
+                item.put("unit", "μg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000).toPlainString());
+                item.put("unit", "mg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num).toPlainString());
+                item.put("unit", "g");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000).toPlainString());
+                item.put("unit", "kg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000000).toPlainString());
+                item.put("unit", "t");
+                listData.add(item);
+                break;
+            case "kg":
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000000).toPlainString());
+                item.put("unit", "μg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000).toPlainString());
+                item.put("unit", "mg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000).toPlainString());
+                item.put("unit", "g");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num).toPlainString());
+                item.put("unit", "kg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num / 1000).toPlainString());
+                item.put("unit", "t");
+                listData.add(item);
+                break;
+            case "t":
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000000000l).toPlainString());
+                item.put("unit", "μg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000000).toPlainString());
+                item.put("unit", "mg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000000).toPlainString());
+                item.put("unit", "g");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num * 1000).toPlainString());
+                item.put("unit", "kg");
+                listData.add(item);
+
+                item = new HashMap<>();
+                item.put("unit_num", BigDecimal.valueOf(num).toPlainString());
+                item.put("unit", "t");
+                listData.add(item);
+                break;
+        }
+
         return listData;
     }
 }
