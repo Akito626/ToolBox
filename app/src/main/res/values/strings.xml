@@ -101,9 +101,9 @@
         <item>mm²</item>
         <item>cm²</item>
         <item>m²</item>
-        <item>km²</item>
         <item>a</item>
         <item>ha</item>
+        <item>km²</item>
     </string-array>
 
     <string-array name="unit_volume">
