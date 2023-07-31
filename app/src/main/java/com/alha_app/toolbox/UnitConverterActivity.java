@@ -81,7 +81,7 @@ public class UnitConverterActivity extends AppCompatActivity {
         Button calcButton = findViewById(R.id.calc_button);
         calcButton.setOnClickListener(v -> {
             if(unitNumText.getText().toString().equals("")) return;
-            prepareList(unitTypeSpinner.getSelectedItemPosition(), unitSpinner.getSelectedItem().toString(), Integer.parseInt(unitNumText.getText().toString()));
+            prepareList(unitTypeSpinner.getSelectedItemPosition(), unitSpinner.getSelectedItem().toString(), Double.parseDouble(unitNumText.getText().toString()));
         });
     }
 
@@ -116,7 +116,7 @@ public class UnitConverterActivity extends AppCompatActivity {
         unitSpinner.setAdapter(adapter);
     }
 
-    private void prepareList(int type, String unit, int num){
+    private void prepareList(int type, String unit, double num){
         List<Map<String, Object>> listData = new ArrayList<>();
 
         System.out.println(type);
