@@ -28,7 +28,8 @@
         <activity
             android:name=".UnitConverterActivity"
             android:label="@string/unitconverter_title"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ColorPickerActivity"
             android:label="@string/colorpicker_title"
