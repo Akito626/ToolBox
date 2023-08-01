@@ -10,9 +10,10 @@
     <string name="clockmenu_title">タイムゾーン</string>
     <string name="qrscanner_title">QRコードリーダー</string>
     <string name="weather_title">天気</string>
-    <string name="translator_title">翻訳（みんなの自動翻訳＠TexTra）</string>
+    <string name="translator_title">翻訳</string>
     <string name="colorpicker_title">カラーピッカー</string>
     <string name="unitconverter_title">単位変換</string>
+    <string name="currencyconverter_title">通貨変換</string>
 
     <string name="textra_text">「アプリケーション利用者向け制限事項」\n\n１　アプリケーション利用者は、商用目的や公序良俗に反する目的のためにアプリケーションを利用することはできません。ただし、アプリケーションを利用して、Wikipedia等のCreative Commons License の文書や、 GNU General Public License,
         MIT License, Apache License, BSD License 等のオープンソースソフトウェアの文書等の公益性が高い文書であって、アプリケーション利用者がその文書の自動翻訳結果や修正結果を利用者や目的の制限なく一般に無償公開する場合には、当該文書のライセンスが当該文書の利用の目的や範囲等を限定していない場合であっても、
@@ -33,6 +34,7 @@
         <item>翻訳</item>
         <item>カラーピッカー</item>
         <item>単位変換</item>
+        <item>通貨変換</item>
     </string-array>
 
     <string name="calc_0">0</string>
@@ -73,7 +75,7 @@
         <item>zh-CN</item>
         <item>de</item>
     </string-array>
-    
+
     <string-array name="unit_type">
         <item>長さ</item>
         <item>重さ</item>
@@ -96,7 +98,7 @@
         <item>kg</item>
         <item>t</item>
     </string-array>
-    
+
     <string-array name="unit_area">
         <item>mm²</item>
         <item>cm²</item>
