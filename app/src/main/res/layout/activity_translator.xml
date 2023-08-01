@@ -95,21 +95,30 @@
         </FrameLayout>
     </ScrollView>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:inputType="text"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:text="みんなの自動翻訳＠TexTra"/>
 
         <Button
             android:id="@+id/translate_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:autoSizeTextType="uniform"
             android:text="翻訳"
             android:textColor="@color/black" />
-    </FrameLayout>
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"

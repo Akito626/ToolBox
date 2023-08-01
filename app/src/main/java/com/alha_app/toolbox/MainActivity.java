@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 画像初期化
         int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer, R.drawable.clock,
-                R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette, R.drawable.ruler};
+                R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette, R.drawable.ruler,
+                R.drawable.ic_money};
         images = new int[tools.length];
 
         for(int i = 0; i < tools.length; i++){
@@ -229,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "単位変換":
                     startActivity(new Intent(getApplication(), UnitConverterActivity.class));
+                    break;
+                case "通貨変換":
+                    startActivity(new Intent(getApplication(), CurrencyConverterActivity.class));
                     break;
             }
         });
