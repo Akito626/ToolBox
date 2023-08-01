@@ -8,19 +8,20 @@
         android:id="@+id/unit_num"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
+        android:layout_weight="0.65"
         android:textSize="30dp"
         android:gravity="right|center_vertical"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:id="@+id/unit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.35"
         android:textSize="30dp"
-        android:gravity="center"
+        android:gravity="center_vertical|left"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
 </LinearLayout>
