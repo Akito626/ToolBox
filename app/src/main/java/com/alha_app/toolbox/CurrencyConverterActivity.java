@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,10 +29,23 @@ public class CurrencyConverterActivity extends AppCompatActivity {
 
         Currency currency = Currency.getInstance(Locale.JAPAN);
 
+        List<String> spinnerItems = new ArrayList<>();
         for(Currency c : Currency.getAvailableCurrencies().stream()
-                .sorted(Comparator.comparing(Currency::getDisplayName)).collect(Collectors.toList())) {
-            System.out.println(c.getDisplayName() + " " + c.getCurrencyCode());
+                .sorted(Comparator.comparing(Currency::getCurrencyCode)).collect(Collectors.toList())) {
+            spinnerItems.add(c.getCurrencyCode() + "　" + c.getDisplayName());
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.spinner_item,
+                spinnerItems
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+
+        Spinner beforeSpinner = findViewById(R.id.before_currency_spinner);
+        Spinner afterSpinner = findViewById(R.id.after_currency_spinner);
+        beforeSpinner.setAdapter(adapter);
+        afterSpinner.setAdapter(adapter);
     }
 
     @Override
