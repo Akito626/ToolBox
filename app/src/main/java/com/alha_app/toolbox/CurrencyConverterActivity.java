@@ -5,8 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import java.util.Comparator;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CurrencyConverterActivity extends AppCompatActivity {
 
@@ -17,6 +23,13 @@ public class CurrencyConverterActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
+
+        Currency currency = Currency.getInstance(Locale.JAPAN);
+
+        for(Currency c : Currency.getAvailableCurrencies().stream()
+                .sorted(Comparator.comparing(Currency::getDisplayName)).collect(Collectors.toList())) {
+            System.out.println(c.getDisplayName() + " " + c.getCurrencyCode());
+        }
     }
 
     @Override
