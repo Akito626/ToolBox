@@ -81,7 +81,7 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResult;
 
-        List<String> currencyCodes = new ArrayList<>();
+        List<Map<String, String>> currencyData = new ArrayList<>();
 
         Request request = new Request.Builder()
                 .url(urlString)
@@ -98,16 +98,22 @@ public class CurrencyConverterActivity extends AppCompatActivity {
             json = response.body().string();
             jsonResult = mapper.readTree(json);
 
+            // javaで利用できる通貨を取得し、APIで利用できる通貨のデータのみ保存
             for(Currency c : Currency.getAvailableCurrencies().stream()
                     .sorted(Comparator.comparing(Currency::getCurrencyCode)).collect(Collectors.toList())) {
                 if(jsonResult.get("conversion_rates").get(c.getCurrencyCode()) != null) {
+                    Map<String, String> data = new HashMap<>();
                     spinnerItems.add(c.getCurrencyCode() + "　" + c.getDisplayName());
-                    currencyCodes.add(c.getCurrencyCode());
                     currencyMap.put(c.getCurrencyCode(), jsonResult.get("conversion_rates").get(c.getCurrencyCode()).asDouble());
+                    data.put("currency_code", c.getCurrencyCode());
+                    data.put("currency_name", c.getDisplayName());
+                    data.put("currency_symbol", c.getSymbol());
+                    currencyData.add(data);
                 }
             }
 
             handler.post(() -> {
+                // spinner用のAdapter
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         this,
                         R.layout.spinner_item,
@@ -128,30 +134,37 @@ public class CurrencyConverterActivity extends AppCompatActivity {
                         ListView currencyList = findViewById(R.id.currency_list);
 
                         if(beforeText.getText().toString().equals("")) return;
-                        double beforeNum = Double.parseDouble(beforeText.getText().toString());
-                        double beforeRate = currencyMap.get(currencyCodes.get(beforeSpinner.getSelectedItemPosition()));
-                        double afterRate = currencyMap.get(currencyCodes.get(afterSpinner.getSelectedItemPosition()));
 
+                        double beforeNum = Double.parseDouble(beforeText.getText().toString());
+                        double beforeRate = currencyMap.get(currencyData.get(beforeSpinner.getSelectedItemPosition()).get("currency_code"));
+                        double afterRate = currencyMap.get(currencyData.get(afterSpinner.getSelectedItemPosition()).get("currency_code"));
+
+                        // ベースの通貨の割合を1にする
                         beforeNum /= beforeRate;
 
-                        String afterStr = String.valueOf(beforeNum * afterRate);
+                        String afterStr = String.format("%.4f", beforeNum * afterRate);
                         afterText.setText(afterStr);
 
                         List<Map<String, Object>> listData = new ArrayList<>();
+
+                        // ListにCode, Name, Rateを表示
+                        int i = 0;
                         for(Map.Entry<String, Double> entry : currencyMap.entrySet()){
+                            System.out.println(currencyData.get(i).get("currency_name") + " " + currencyData.get(i).get("currency_symbol"));
                             Map<String, Object> item = new HashMap<>();
                             item.put("currency_code", entry.getKey());
-                            //item.put("currency_name", );
-                            item.put("currency_rate", beforeNum * entry.getValue());
+                            item.put("currency_name", currencyData.get(i).get("currency_name"));
+                            item.put("currency_rate", String.format("%.4f", beforeNum * entry.getValue()));
                             listData.add(item);
+                            i++;
                         }
 
                         currencyList.setAdapter(new SimpleAdapter(
                                 parent.getContext(),
                                 listData,
                                 R.layout.currency_list_item,
-                                new String[] {"currency_code", "currency_rate"},
-                                new int[] {R.id.currency_code, R.id.currency_rate}
+                                new String[] {"currency_code", "currency_name", "currency_rate"},
+                                new int[] {R.id.currency_code, R.id.currency_name, R.id.currency_rate}
                         ));
                     }
 
