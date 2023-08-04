@@ -36,6 +36,7 @@ android {
         buildConfigField "String", "TTKEY", "\"${project.property("TTKey")}\""
         buildConfigField "String", "TTKEYSECRET", "\"${project.property("TTKeySecret")}\""
         buildConfigField "String", "USERNAME", "\"${project.property("username")}\""
+        buildConfigField "String", "CURRENCYKEY", "\"${project.property("CurrencyKey")}\""
     }
 }
 
