@@ -5,12 +5,11 @@ plugins {
 
 android {
     namespace 'com.alha_app.toolbox'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.alha_app.toolbox"
         minSdk 26
-        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -32,6 +31,8 @@ android {
     }
 
     defaultConfig {
+
+        targetSdk 33
         buildConfigField "String", "WEATHERKEY", "\"${project.property("WeatherKey")}\""
         buildConfigField "String", "TTKEY", "\"${project.property("TTKey")}\""
         buildConfigField "String", "TTKEYSECRET", "\"${project.property("TTKeySecret")}\""
@@ -72,4 +73,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     implementation 'com.jaredrummler:colorpicker:1.1.0'
+
+    // Room
+    implementation "androidx.room:room-runtime:2.5.2"
+    annotationProcessor "androidx.room:room-compiler:2.5.2"
 }

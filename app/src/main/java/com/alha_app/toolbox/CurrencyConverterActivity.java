@@ -2,7 +2,9 @@ package com.alha_app.toolbox;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -17,6 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alha_app.toolbox.database.CurrencyDao;
+import com.alha_app.toolbox.database.CurrencyDatabase;
+import com.alha_app.toolbox.database.CurrencyEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,8 +45,7 @@ import okhttp3.Response;
 public class CurrencyConverterActivity extends AppCompatActivity {
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private Handler handler;
-
-    private Map<String, Double> currencyMap = new LinkedHashMap<>();
+    private List<CurrencyEntity> currencyData = new ArrayList<>();
     private List<String> spinnerItems = new ArrayList<>();
 
     @Override
@@ -54,7 +58,7 @@ public class CurrencyConverterActivity extends AppCompatActivity {
 
         handler = new Handler();
 
-        executor.execute(() -> getCurrencyRates());
+        loadRates();
     }
 
     @Override
@@ -75,13 +79,23 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         return result;
     }
 
+    // rateが更新されていれば取得、そうでなければ保存しているデータを読み込む
+    private void loadRates(){
+        SharedPreferences preferences = getSharedPreferences("prefData", MODE_PRIVATE);
+        long updateTime = preferences.getLong("updateTime", 0);
+
+        if(updateTime < (System.currentTimeMillis() / 1000)) {
+            executor.execute(() -> getCurrencyRates());
+        } else {
+            loadDB();
+        }
+    }
+
     private void getCurrencyRates(){
         String urlString = "https://v6.exchangerate-api.com/v6/" + BuildConfig.CURRENCYKEY +"/latest/USD";
         String json;
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResult;
-
-        List<Map<String, String>> currencyData = new ArrayList<>();
 
         Request request = new Request.Builder()
                 .url(urlString)
@@ -102,83 +116,117 @@ public class CurrencyConverterActivity extends AppCompatActivity {
             for(Currency c : Currency.getAvailableCurrencies().stream()
                     .sorted(Comparator.comparing(Currency::getCurrencyCode)).collect(Collectors.toList())) {
                 if(jsonResult.get("conversion_rates").get(c.getCurrencyCode()) != null) {
-                    Map<String, String> data = new HashMap<>();
+                    CurrencyEntity entity = new CurrencyEntity(c.getCurrencyCode(), c.getDisplayName(), jsonResult.get("conversion_rates").get(c.getCurrencyCode()).asDouble());
+                    currencyData.add(entity);
                     spinnerItems.add(c.getCurrencyCode() + "　" + c.getDisplayName());
-                    currencyMap.put(c.getCurrencyCode(), jsonResult.get("conversion_rates").get(c.getCurrencyCode()).asDouble());
-                    data.put("currency_code", c.getCurrencyCode());
-                    data.put("currency_name", c.getDisplayName());
-                    data.put("currency_symbol", c.getSymbol());
-                    currencyData.add(data);
                 }
             }
 
-            handler.post(() -> {
-                // spinner用のAdapter
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                        this,
-                        R.layout.spinner_item,
-                        spinnerItems
-                );
-                adapter.setDropDownViewResource(R.layout.spinner_item);
+            // 次にRateが更新される時間を保存
+            SharedPreferences preferences = getSharedPreferences("prefData", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong("updateTime", jsonResult.get("time_next_update_unix").asLong());
+            editor.commit();
 
-                Spinner beforeSpinner = findViewById(R.id.before_currency_spinner);
-                Spinner afterSpinner = findViewById(R.id.after_currency_spinner);
-                beforeSpinner.setAdapter(adapter);
-                afterSpinner.setAdapter(adapter);
+            writeDB();
 
-                AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        EditText beforeText = findViewById(R.id.before_currency_text);
-                        TextView afterText = findViewById(R.id.after_currency_text);
-                        ListView currencyList = findViewById(R.id.currency_list);
-
-                        if(beforeText.getText().toString().equals("")) return;
-
-                        double beforeNum = Double.parseDouble(beforeText.getText().toString());
-                        double beforeRate = currencyMap.get(currencyData.get(beforeSpinner.getSelectedItemPosition()).get("currency_code"));
-                        double afterRate = currencyMap.get(currencyData.get(afterSpinner.getSelectedItemPosition()).get("currency_code"));
-
-                        // ベースの通貨の割合を1にする
-                        beforeNum /= beforeRate;
-
-                        String afterStr = String.format("%.4f", beforeNum * afterRate);
-                        afterText.setText(afterStr);
-
-                        List<Map<String, Object>> listData = new ArrayList<>();
-
-                        // ListにCode, Name, Rateを表示
-                        int i = 0;
-                        for(Map.Entry<String, Double> entry : currencyMap.entrySet()){
-                            System.out.println(currencyData.get(i).get("currency_name") + " " + currencyData.get(i).get("currency_symbol"));
-                            Map<String, Object> item = new HashMap<>();
-                            item.put("currency_code", entry.getKey());
-                            item.put("currency_name", currencyData.get(i).get("currency_name"));
-                            item.put("currency_rate", String.format("%.4f", beforeNum * entry.getValue()));
-                            listData.add(item);
-                            i++;
-                        }
-
-                        currencyList.setAdapter(new SimpleAdapter(
-                                parent.getContext(),
-                                listData,
-                                R.layout.currency_list_item,
-                                new String[] {"currency_code", "currency_name", "currency_rate"},
-                                new int[] {R.id.currency_code, R.id.currency_name, R.id.currency_rate}
-                        ));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                };
-
-                beforeSpinner.setOnItemSelectedListener(listener);
-                afterSpinner.setOnItemSelectedListener(listener);
-            });
+            handler.post(() -> prepareSpinner());
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void prepareSpinner(){
+        // spinner用のAdapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.spinner_item,
+                spinnerItems
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+
+        Spinner beforeSpinner = findViewById(R.id.before_currency_spinner);
+        Spinner afterSpinner = findViewById(R.id.after_currency_spinner);
+        beforeSpinner.setAdapter(adapter);
+        afterSpinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EditText beforeText = findViewById(R.id.before_currency_text);
+                TextView afterText = findViewById(R.id.after_currency_text);
+                ListView currencyList = findViewById(R.id.currency_list);
+
+                if(beforeText.getText().toString().equals("")) return;
+
+                double beforeNum = Double.parseDouble(beforeText.getText().toString());
+                double beforeRate = currencyData.get(beforeSpinner.getSelectedItemPosition()).getCurrencyRate();
+                double afterRate = currencyData.get(afterSpinner.getSelectedItemPosition()).getCurrencyRate();
+
+                // ベースの通貨の割合を1にする
+                beforeNum /= beforeRate;
+
+                String afterStr = String.format("%.4f", beforeNum * afterRate);
+                afterText.setText(afterStr);
+
+                List<Map<String, Object>> listData = new ArrayList<>();
+
+                // ListにCode, Name, Rateを表示
+                for(CurrencyEntity entity : currencyData){
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("currency_code", entity.getCurrencyCode());
+                    item.put("currency_name", entity.getCurrencyName());
+                    item.put("currency_rate", String.format("%.4f", beforeNum * entity.getCurrencyRate()));
+                    listData.add(item);
+                }
+
+                currencyList.setAdapter(new SimpleAdapter(
+                        parent.getContext(),
+                        listData,
+                        R.layout.currency_list_item,
+                        new String[] {"currency_code", "currency_name", "currency_rate"},
+                        new int[] {R.id.currency_code, R.id.currency_name, R.id.currency_rate}
+                ));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+
+        beforeSpinner.setOnItemSelectedListener(listener);
+        afterSpinner.setOnItemSelectedListener(listener);
+    }
+
+    // データベースにデータを書き込む
+    private void writeDB(){
+        executor.execute(() -> {
+            CurrencyDatabase db = Room.databaseBuilder(getApplication(),
+                    CurrencyDatabase.class, "CURRENCY_DATA").build();
+            CurrencyDao dao = db.currencyDao();
+            dao.deleteAll();
+            for(CurrencyEntity entity: currencyData){
+                dao.insert(entity);
+            }
+        });
+    }
+
+    // データベースからデータを読み込む
+    private void loadDB(){
+        executor.execute(() -> {
+            CurrencyDatabase db = Room.databaseBuilder(getApplication(),
+                    CurrencyDatabase.class, "CURRENCY_DATA").build();
+            CurrencyDao dao = db.currencyDao();
+            currencyData = dao.getAll();
+
+            handler.post(() -> {
+                for(CurrencyEntity entity : currencyData){
+                    spinnerItems.add(entity.getCurrencyCode() + "　" + entity.getCurrencyName());
+                }
+
+                prepareSpinner();
+            });
+        });
     }
 }
