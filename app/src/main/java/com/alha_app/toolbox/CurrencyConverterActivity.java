@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -59,6 +61,18 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         handler = new Handler();
+
+        Spinner beforeSpinner = findViewById(R.id.before_currency_spinner);
+        Spinner afterSpinner = findViewById(R.id.after_currency_spinner);
+
+        ImageButton swapButton = findViewById(R.id.currency_swap_button);
+        swapButton.setOnClickListener(v -> {
+            int position = beforeSpinner.getSelectedItemPosition();
+            beforeSpinner.setSelection(afterSpinner.getSelectedItemPosition());
+            afterSpinner.setSelection(position);
+
+            prepareList();
+        });
 
         EditText beforeText = findViewById(R.id.before_currency_text);
         beforeText.addTextChangedListener(new TextWatcher() {
