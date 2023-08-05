@@ -7,6 +7,8 @@ import androidx.room.Room;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
@@ -57,6 +59,22 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
         handler = new Handler();
+
+        EditText beforeText = findViewById(R.id.before_currency_text);
+        beforeText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                prepareList();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         loadRates();
     }
@@ -153,40 +171,7 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EditText beforeText = findViewById(R.id.before_currency_text);
-                TextView afterText = findViewById(R.id.after_currency_text);
-                ListView currencyList = findViewById(R.id.currency_list);
-
-                if(beforeText.getText().toString().equals("")) return;
-
-                double beforeNum = Double.parseDouble(beforeText.getText().toString());
-                double beforeRate = currencyData.get(beforeSpinner.getSelectedItemPosition()).getCurrencyRate();
-                double afterRate = currencyData.get(afterSpinner.getSelectedItemPosition()).getCurrencyRate();
-
-                // ベースの通貨の割合を1にする
-                beforeNum /= beforeRate;
-
-                String afterStr = String.format("%.4f", beforeNum * afterRate);
-                afterText.setText(afterStr);
-
-                List<Map<String, Object>> listData = new ArrayList<>();
-
-                // ListにCode, Name, Rateを表示
-                for(CurrencyEntity entity : currencyData){
-                    Map<String, Object> item = new HashMap<>();
-                    item.put("currency_code", entity.getCurrencyCode());
-                    item.put("currency_name", entity.getCurrencyName());
-                    item.put("currency_rate", String.format("%.4f", beforeNum * entity.getCurrencyRate()));
-                    listData.add(item);
-                }
-
-                currencyList.setAdapter(new SimpleAdapter(
-                        parent.getContext(),
-                        listData,
-                        R.layout.currency_list_item,
-                        new String[] {"currency_code", "currency_name", "currency_rate"},
-                        new int[] {R.id.currency_code, R.id.currency_name, R.id.currency_rate}
-                ));
+                prepareList();
             }
 
             @Override
@@ -197,6 +182,48 @@ public class CurrencyConverterActivity extends AppCompatActivity {
 
         beforeSpinner.setOnItemSelectedListener(listener);
         afterSpinner.setOnItemSelectedListener(listener);
+    }
+
+    private void prepareList(){
+        Spinner beforeSpinner = findViewById(R.id.before_currency_spinner);
+        Spinner afterSpinner = findViewById(R.id.after_currency_spinner);
+        EditText beforeText = findViewById(R.id.before_currency_text);
+        TextView afterText = findViewById(R.id.after_currency_text);
+        ListView currencyList = findViewById(R.id.currency_list);
+
+        if(beforeText.getText().toString().equals("")) {
+            afterText.setText("");
+            return;
+        }
+
+        double beforeNum = Double.parseDouble(beforeText.getText().toString());
+        double beforeRate = currencyData.get(beforeSpinner.getSelectedItemPosition()).getCurrencyRate();
+        double afterRate = currencyData.get(afterSpinner.getSelectedItemPosition()).getCurrencyRate();
+
+        // ベースの通貨の割合を1にする
+        beforeNum /= beforeRate;
+
+        String afterStr = String.format("%.4f", beforeNum * afterRate);
+        afterText.setText(afterStr);
+
+        List<Map<String, Object>> listData = new ArrayList<>();
+
+        // ListにCode, Name, Rateを表示
+        for(CurrencyEntity entity : currencyData){
+            Map<String, Object> item = new HashMap<>();
+            item.put("currency_code", entity.getCurrencyCode());
+            item.put("currency_name", entity.getCurrencyName());
+            item.put("currency_rate", String.format("%.4f", beforeNum * entity.getCurrencyRate()));
+            listData.add(item);
+        }
+
+        currencyList.setAdapter(new SimpleAdapter(
+                this,
+                listData,
+                R.layout.currency_list_item,
+                new String[] {"currency_code", "currency_name", "currency_rate"},
+                new int[] {R.id.currency_code, R.id.currency_name, R.id.currency_rate}
+        ));
     }
 
     // データベースにデータを書き込む
