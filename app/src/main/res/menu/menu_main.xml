@@ -5,8 +5,13 @@
     <item
         android:id="@+id/action_favorite"
         android:icon="@drawable/star"
-        android:title="リセット"
+        android:title="お気に入り"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="並び替え"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_license"
