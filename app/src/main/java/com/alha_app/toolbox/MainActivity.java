@@ -129,16 +129,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.context_favorite:
                 if(isFavorite.contains(appname)){
                     isFavorite.remove(appname);
-                    for(int i = 0; i < tools.size(); i++){
-                        if(appname.equals(tools.get(i).getName())){
+                    for(int i = 0; i < listData.size(); i++){
+                        if(appname.equals(listData.get(i).get("name"))){
                             listData.get(i).put("image_favorite", null);
                             adapter.notifyDataSetChanged();
                         }
                     }
                 } else {
                     isFavorite.add(appname);
-                    for(int i = 0; i < tools.size(); i++){
-                        if(appname.equals(tools.get(i).getName())){
+                    for(int i = 0; i < listData.size(); i++){
+                        if(appname.equals(listData.get(i).get("name"))){
                             listData.get(i).put("image_favorite", star);
                             adapter.notifyDataSetChanged();
                         }
