@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.alha_app.toolbox.entities.Tool;
 import com.google.android.gms.oss.licenses.OssLicensesActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
@@ -29,16 +30,18 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private Map<String, Boolean> isFavorite;
+    private Set<String> isFavorite = new HashSet<>();
     private SimpleAdapter adapter;
-    ArrayList<Map<String, Object>> listData;
-    String [] tools;
+    private List<Map<String, Object>> listData = new ArrayList<>();
 
-    int[] images;
-    int star;
+    private List<Tool> tools = new ArrayList<>();
+    private int star;
     private boolean isPushed;
     private final String mFileName = "favorite.txt";
 
@@ -48,21 +51,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 初期化
-        tools = getResources().getStringArray(R.array.tools);
-        isFavorite = new HashMap<>();
+        String[] toolNames = getResources().getStringArray(R.array.tools);
         isPushed = false;
-        listData = new ArrayList<>();
         star = R.drawable.star;
 
         // 画像初期化
-        int[] tmp = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer, R.drawable.clock,
+        int[] toolImages = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer, R.drawable.clock,
                 R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette, R.drawable.ruler,
                 R.drawable.ic_money};
-        images = new int[tools.length];
 
-        for(int i = 0; i < tools.length; i++){
-            isFavorite.put(tools[i], false);
-            images[i] = tmp[i];
+        for(int i = 0; i < toolNames.length; i++){
+            Tool tool = new Tool(i, toolNames[i], toolImages[i]);
+            tools.add(tool);
         }
 
         loadFavorite();
@@ -127,18 +127,18 @@ public class MainActivity extends AppCompatActivity {
         appname = appname.substring(index+5, appname.length()-1);
         switch(item.getItemId()) {
             case R.id.context_favorite:
-                if(isFavorite.get(appname)){
-                    isFavorite.put(appname, false);
-                    for(int i = 0; i < tools.length; i++){
-                        if(appname.equals(tools[i])){
+                if(isFavorite.contains(appname)){
+                    isFavorite.remove(appname);
+                    for(int i = 0; i < tools.size(); i++){
+                        if(appname.equals(tools.get(i).getName())){
                             listData.get(i).put("image_favorite", null);
                             adapter.notifyDataSetChanged();
                         }
                     }
                 } else {
-                    isFavorite.put(appname, true);
-                    for(int i = 0; i < tools.length; i++){
-                        if(appname.equals(tools[i])){
+                    isFavorite.add(appname);
+                    for(int i = 0; i < tools.size(); i++){
+                        if(appname.equals(tools.get(i).getName())){
                             listData.get(i).put("image_favorite", star);
                             adapter.notifyDataSetChanged();
                         }
@@ -156,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void prepareList(){
         listData.clear();
-        for (int i=0; i < tools.length; i++) {
+        for (Tool tool: tools) {
             Map<String, Object> item = new HashMap<>();
-            item.put("name", tools[i]);
-            item.put("image", images[i]);
-            if(isFavorite.get(tools[i])){
+            item.put("name", tool.getName());
+            item.put("image", tool.getImage());
+            if(isFavorite.contains(tool.getName())){
                 item.put("image_favorite", star);
             }
             listData.add(item);
@@ -171,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
     // お気に入りに追加したアイテムのリスト
     public void prepareFavoriteList(){
         listData.clear();
-        for (int i=0; i < tools.length; i++) {
+        for (Tool tool: tools) {
             Map<String, Object> item = new HashMap<>();
-            if(isFavorite.get(tools[i])) {
-                item.put("name", tools[i]);
-                item.put("image", images[i]);
+            if(isFavorite.contains(tool.getName())) {
+                item.put("name", tool.getName());
+                item.put("image", tool.getImage());
                 item.put("image_favorite", star);
                 listData.add(item);
             }
@@ -241,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveFavorite(){
-        String [] tools = getResources().getStringArray(R.array.tools);
         // 保存
         OutputStream out = null;
         PrintWriter writer = null;
@@ -249,10 +248,8 @@ public class MainActivity extends AppCompatActivity {
             out = this.openFileOutput(mFileName, Context.MODE_PRIVATE);
             writer = new PrintWriter(new OutputStreamWriter(out,"UTF-8"));
 
-            for (int i=0; i < tools.length; i++) {
-                if(isFavorite.get(tools[i])) {
-                    writer.println(tools[i]);
-                }
+            for (String name: isFavorite) {
+                writer.println(name);
             }
         }catch(Exception e){
             Toast.makeText(this, "File save error!", Toast.LENGTH_LONG).show();
@@ -283,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // アプリの保存フォルダ内のファイル一覧を取得
-        String savePath = this.getFilesDir().getPath().toString();
+        String savePath = this.getFilesDir().getPath();
         File[] files = new File(savePath).listFiles(filter);
 
         if(files.length != 0) {
@@ -298,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String str = reader.readLine();
                 while (str != null){
-                    isFavorite.put(str, true);
+                    isFavorite.add(str);
                     str = reader.readLine();
                 }
 
