@@ -76,12 +76,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
+
+        System.out.println("pause");
         saveFavorite();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+
+        sortList();
         if(isPushed) {
             prepareFavoriteList();
         } else {
@@ -109,22 +113,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_sort:
-                String[] choiceList = {"デフォルト", "名前順"};
+                String[] choiceList = {"デフォルト", "名前順", "利用回数順"};
                 new AlertDialog.Builder(this)
                         .setTitle("並び替え")
                         .setSingleChoiceItems(choiceList, checkedSortItem, (dialog, which) -> {
                             checkedSortItem = which;
                         })
                         .setPositiveButton("OK", (dialog, which) -> {
-                            // toolsをソートする
-                            switch (checkedSortItem) {
-                                case 0:
-                                    tools.sort(Comparator.comparing(Tool::getId));
-                                    break;
-                                case 1:
-                                    tools.sort(Comparator.comparing(Tool::getName));
-                                    break;
-                            }
+                            sortList();
 
                             if(isPushed){
                                 prepareFavoriteList();
@@ -231,6 +227,13 @@ public class MainActivity extends AppCompatActivity {
             String appname = adapter.getItem(position).toString();
             int index = appname.indexOf("name=");
             appname = appname.substring(index+5, appname.length()-1);
+
+            // 押した回数をカウント
+            index = tools.indexOf(new Tool(appname));
+            tools.get(index).addCount();
+
+            System.out.println(index + " " + tools.get(index).getName() + " " + appname);
+
             switch (appname){
                 case "電卓":
                     startActivity(new Intent(getApplication(), CalcActivity.class));
@@ -269,6 +272,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(list);
+    }
+
+    // toolsをソートする
+    public void sortList(){
+        switch (checkedSortItem) {
+            case 0:
+                tools.sort(Comparator.comparing(Tool::getId));
+                break;
+            case 1:
+                tools.sort(Comparator.comparing(Tool::getName));
+                break;
+            case 2:
+                tools.sort(Comparator.comparing(Tool::getCount).reversed());
+                break;
+        }
     }
 
     public void saveFavorite(){
