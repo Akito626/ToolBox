@@ -3,7 +3,9 @@ package com.alha_app.toolbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -29,6 +31,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    private final String mFileName = "favorite.txt";
     private Set<String> isFavorite = new HashSet<>();
     private SimpleAdapter adapter;
     private List<Map<String, Object>> listData = new ArrayList<>();
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Tool> tools = new ArrayList<>();
     private int star;
     private boolean isPushed;
-    private final String mFileName = "favorite.txt";
+    private int checkedSortItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,32 @@ public class MainActivity extends AppCompatActivity {
                     prepareFavoriteList();
                 }
                 break;
+            case R.id.action_sort:
+                String[] choiceList = {"デフォルト", "名前順"};
+                new AlertDialog.Builder(this)
+                        .setTitle("並び替え")
+                        .setSingleChoiceItems(choiceList, checkedSortItem, (dialog, which) -> {
+                            checkedSortItem = which;
+                        })
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            // toolsをソートする
+                            switch (checkedSortItem) {
+                                case 0:
+                                    tools.sort(Comparator.comparing(Tool::getId));
+                                    break;
+                                case 1:
+                                    tools.sort(Comparator.comparing(Tool::getName));
+                                    break;
+                            }
+
+                            if(isPushed){
+                                prepareFavoriteList();
+                            } else {
+                                prepareList();
+                            }
+                        })
+                        .show();
+                break;
             case R.id.action_license:
                 OssLicensesMenuActivity.setActivityTitle("ライセンス");
                 startActivity(new Intent(getApplication(), OssLicensesMenuActivity.class));
@@ -127,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         appname = appname.substring(index+5, appname.length()-1);
         switch(item.getItemId()) {
             case R.id.context_favorite:
+                // お気に入りに入っていれば削除、入っていなければ追加してリストを再表示
                 if(isFavorite.contains(appname)){
                     isFavorite.remove(appname);
                     for(int i = 0; i < listData.size(); i++){
