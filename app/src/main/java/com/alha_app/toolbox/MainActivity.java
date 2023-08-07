@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
-
-        System.out.println("pause");
         saveFavorite();
     }
 
@@ -231,8 +229,6 @@ public class MainActivity extends AppCompatActivity {
             // 押した回数をカウント
             index = tools.indexOf(new Tool(appname));
             tools.get(index).addCount();
-
-            System.out.println(index + " " + tools.get(index).getName() + " " + appname);
 
             switch (appname){
                 case "電卓":

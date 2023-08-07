@@ -11,10 +11,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -23,8 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alha_app.toolbox.database.AppDatabase;
 import com.alha_app.toolbox.database.CurrencyDao;
-import com.alha_app.toolbox.database.CurrencyDatabase;
 import com.alha_app.toolbox.database.CurrencyEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,9 +31,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -117,8 +113,10 @@ public class CurrencyConverterActivity extends AppCompatActivity {
         long updateTime = preferences.getLong("updateTime", 0);
 
         if(updateTime < (System.currentTimeMillis() / 1000)) {
+            System.out.println("get");
             executor.execute(() -> getCurrencyRates());
         } else {
+            System.out.println("load");
             loadDB();
         }
     }
@@ -243,8 +241,8 @@ public class CurrencyConverterActivity extends AppCompatActivity {
     // データベースにデータを書き込む
     private void writeDB(){
         executor.execute(() -> {
-            CurrencyDatabase db = Room.databaseBuilder(getApplication(),
-                    CurrencyDatabase.class, "CURRENCY_DATA").build();
+            AppDatabase db = Room.databaseBuilder(getApplication(),
+                    AppDatabase.class, "CURRENCY_DATA").build();
             CurrencyDao dao = db.currencyDao();
             dao.deleteAll();
             for(CurrencyEntity entity: currencyData){
@@ -256,8 +254,8 @@ public class CurrencyConverterActivity extends AppCompatActivity {
     // データベースからデータを読み込む
     private void loadDB(){
         executor.execute(() -> {
-            CurrencyDatabase db = Room.databaseBuilder(getApplication(),
-                    CurrencyDatabase.class, "CURRENCY_DATA").build();
+            AppDatabase db = Room.databaseBuilder(getApplication(),
+                    AppDatabase.class, "CURRENCY_DATA").build();
             CurrencyDao dao = db.currencyDao();
             currencyData = dao.getAll();
 
