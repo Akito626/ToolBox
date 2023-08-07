@@ -2,12 +2,12 @@ package com.alha_app.toolbox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,32 +15,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
+import com.alha_app.toolbox.database.AppDatabase;
+import com.alha_app.toolbox.database.ToolDao;
+import com.alha_app.toolbox.database.ToolEntity;
 import com.alha_app.toolbox.entities.Tool;
-import com.google.android.gms.oss.licenses.OssLicensesActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    private final String mFileName = "favorite.txt";
-    private Set<String> isFavorite = new HashSet<>();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler();
     private SimpleAdapter adapter;
     private List<Map<String, Object>> listData = new ArrayList<>();
 
@@ -69,14 +61,13 @@ public class MainActivity extends AppCompatActivity {
             tools.add(tool);
         }
 
-        loadFavorite();
-        prepareList();
+        loadDB();
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        saveFavorite();
+        writeDB();
     }
 
     @Override
@@ -111,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_sort:
-                String[] choiceList = {"デフォルト", "名前順", "利用回数順"};
+                String[] choiceList = {"デフォルト", "名前順", "使用回数順"};
                 new AlertDialog.Builder(this)
                         .setTitle("並び替え")
                         .setSingleChoiceItems(choiceList, checkedSortItem, (dialog, which) -> {
@@ -152,8 +143,9 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.context_favorite:
                 // お気に入りに入っていれば削除、入っていなければ追加してリストを再表示
-                if(isFavorite.contains(appname)){
-                    isFavorite.remove(appname);
+                index = tools.indexOf(new Tool(appname));
+                if(tools.get(index).isFavorite()){
+                    tools.get(index).setFavorite(false);
                     for(int i = 0; i < listData.size(); i++){
                         if(appname.equals(listData.get(i).get("name"))){
                             listData.get(i).put("image_favorite", null);
@@ -161,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    isFavorite.add(appname);
+                    tools.get(index).setFavorite(true);
                     for(int i = 0; i < listData.size(); i++){
                         if(appname.equals(listData.get(i).get("name"))){
                             listData.get(i).put("image_favorite", star);
@@ -185,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             Map<String, Object> item = new HashMap<>();
             item.put("name", tool.getName());
             item.put("image", tool.getImage());
-            if(isFavorite.contains(tool.getName())){
+            if(tool.isFavorite()){
                 item.put("image_favorite", star);
             }
             listData.add(item);
@@ -198,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         listData.clear();
         for (Tool tool: tools) {
             Map<String, Object> item = new HashMap<>();
-            if(isFavorite.contains(tool.getName())) {
+            if(tool.isFavorite()) {
                 item.put("name", tool.getName());
                 item.put("image", tool.getImage());
                 item.put("image_favorite", star);
@@ -285,81 +277,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void saveFavorite(){
-        // 保存
-        OutputStream out = null;
-        PrintWriter writer = null;
-        try{
-            out = this.openFileOutput(mFileName, Context.MODE_PRIVATE);
-            writer = new PrintWriter(new OutputStreamWriter(out,"UTF-8"));
-
-            for (String name: isFavorite) {
-                writer.println(name);
+    // データベースにデータを書き込む
+    private void writeDB(){
+        executor.execute(() -> {
+            AppDatabase db = Room.databaseBuilder(getApplication(),
+                    AppDatabase.class, "TOOL_DATA").build();
+            ToolDao dao = db.toolDao();
+            dao.deleteAll();
+            tools.sort(Comparator.comparing(Tool::getId));
+            for (Tool tool: tools){
+                ToolEntity entity = new ToolEntity(tool.getId(), tool.getCount(), tool.isFavorite());
+                dao.insert(entity);
             }
-        }catch(Exception e){
-            Toast.makeText(this, "File save error!", Toast.LENGTH_LONG).show();
-        }finally {
-            if(writer != null){
-                try{
-                    writer.close();
-                } catch (Exception e2){ };
-            }
-            if(out != null){
-                try{
-                    out.close();
-                } catch (Exception e2){ };
-            }
-        }
+        });
     }
 
-    public void loadFavorite() {
-        FilenameFilter filter = new FilenameFilter(){
-            public boolean accept(File file, String str){
-                //指定文字列でフィルタする
-                if(str.indexOf(mFileName) != -1) {
-                    return true;
-                } else {
-                    return false;
-                }
+    // データベースからデータを読み込む
+    private void loadDB(){
+        executor.execute(() -> {
+            AppDatabase db = Room.databaseBuilder(getApplication(),
+                    AppDatabase.class, "TOOL_DATA").build();
+            ToolDao dao = db.toolDao();
+            List<ToolEntity> toolData = dao.getAll();
+            tools.sort(Comparator.comparing(Tool::getId));
+            for(int i = 0; i < toolData.size(); i++){
+                tools.get(i).setCount(toolData.get(i).getCount());
+                tools.get(i).setFavorite(toolData.get(i).isFavorite());
             }
-        };
 
-        // アプリの保存フォルダ内のファイル一覧を取得
-        String savePath = this.getFilesDir().getPath();
-        File[] files = new File(savePath).listFiles(filter);
-
-        if(files.length != 0) {
-            String fileName = files[0].getName();
-            //　ファイルを読み込み
-            InputStream in = null;
-            BufferedReader reader = null;
-            try {
-                // ファイルオープン
-                in = this.openFileInput(fileName);
-                reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-                String str = reader.readLine();
-                while (str != null){
-                    isFavorite.add(str);
-                    str = reader.readLine();
-                }
-
-                reader.close();
-                in.close();
-            } catch (Exception e) {
-                Toast.makeText(this, "File read error!", Toast.LENGTH_LONG).show();
-            } finally {
-                if(reader != null){
-                    try{
-                        reader.close();
-                    } catch (Exception e2){ };
-                }
-                if(in != null){
-                    try{
-                        in.close();
-                    } catch (Exception e2){ };
-                }
-            }
-        }
+            handler.post(() -> prepareList());
+        });
     }
 }

@@ -5,6 +5,7 @@ public class Tool {
     private String name;
     private int image;
     private int count;
+    private boolean isFavorite;
 
     public Tool(String name){
         this.name = name;
@@ -42,6 +43,14 @@ public class Tool {
     }
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public void addCount(){
