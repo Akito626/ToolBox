@@ -50,9 +50,7 @@ public class CompassActivity extends AppCompatActivity {
                 if(degree < 0){
                     degree += 360;
                 }
-
-                TextView textView = findViewById(R.id.degree_text);
-                textView.setText(degree + "度");
+                updateCompass(degree);
             }
 
             @Override
@@ -81,5 +79,19 @@ public class CompassActivity extends AppCompatActivity {
                 break;
         }
         return result;
+    }
+
+    private void updateCompass(float degree){
+        String[] directions = {
+                "北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東",
+                "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西", "北"
+        };
+
+        TextView azimuthText = findViewById(R.id.azimuth_text);
+        TextView degreeText = findViewById(R.id.degree_text);
+        degreeText.setText(String.format("%.1f", degree) + "度");
+
+        int index = (int) ((degree + 11.25) % 360 / 22.5);
+        azimuthText.setText(directions[index]);
     }
 }
