@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler();
+    private final Tool searchTool = new Tool();
     private SimpleAdapter adapter;
     private List<Map<String, Object>> listData = new ArrayList<>();
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // 画像初期化
         int[] toolImages = {R.drawable.calculator, R.drawable.counter, R.drawable.stopwatch, R.drawable.timer, R.drawable.clock,
                 R.drawable.ic_baseline_qr_code_scanner_24, R.drawable.weather, R.drawable.translate, R.drawable.ic_palette, R.drawable.ruler,
-                R.drawable.ic_money};
+                R.drawable.ic_money, R.drawable.compass};
 
         for(int i = 0; i < toolNames.length; i++){
             Tool tool = new Tool(i, toolNames[i], toolImages[i]);
@@ -143,7 +144,8 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.context_favorite:
                 // お気に入りに入っていれば削除、入っていなければ追加してリストを再表示
-                index = tools.indexOf(new Tool(appname));
+                searchTool.setName(appname);
+                index = tools.indexOf(searchTool);
                 if(tools.get(index).isFavorite()){
                     tools.get(index).setFavorite(false);
                     for(int i = 0; i < listData.size(); i++){
@@ -219,7 +221,8 @@ public class MainActivity extends AppCompatActivity {
             appname = appname.substring(index+5, appname.length()-1);
 
             // 押した回数をカウント
-            index = tools.indexOf(new Tool(appname));
+            searchTool.setName(appname);
+            index = tools.indexOf(searchTool);
             tools.get(index).addCount();
 
             switch (appname){
@@ -255,6 +258,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "通貨変換":
                     startActivity(new Intent(getApplication(), CurrencyConverterActivity.class));
+                    break;
+                case "コンパス":
+                    startActivity(new Intent(getApplication(), CompassActivity.class));
                     break;
             }
         });
