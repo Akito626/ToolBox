@@ -7,8 +7,7 @@ public class Tool {
     private int count;
     private boolean isFavorite;
 
-    public Tool(String name){
-        this.name = name;
+    public Tool(){
     }
 
     public Tool(int id, String name, int image){
