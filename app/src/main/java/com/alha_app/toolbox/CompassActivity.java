@@ -4,17 +4,28 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Objects;
 
 public class CompassActivity extends AppCompatActivity {
+    private CanvasView canvasView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,25 @@ public class CompassActivity extends AppCompatActivity {
 
         sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(sensorEventListener, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        FrameLayout compassLayout = findViewById(R.id.compass_layout);
+        compassLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(compassLayout.getHeight() > compassLayout.getWidth()){
+                    compassLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                            compassLayout.getWidth(),
+                            compassLayout.getWidth()
+                    ));
+                }
+
+                // 不要になったリスナーを削除
+                compassLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+        canvasView = new CanvasView(this);
+        compassLayout.addView(canvasView);
     }
 
     @Override
@@ -96,5 +126,36 @@ public class CompassActivity extends AppCompatActivity {
 
         int index = (int) ((degree + 11.25) / 22.5);
         azimuthText.setText(directions[index]);
+
+        canvasView.setRotation(degree);
+    }
+
+    private class CanvasView extends View{
+        public CanvasView(Context context){
+            super(context);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas){
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.RED);
+
+            int centerX = getWidth() / 2;
+            int centerY = getHeight() / 2;
+
+            Path path1 = new Path();
+            path1.moveTo(centerX, 20);
+            path1.lineTo(centerX - 30, centerY);
+            path1.lineTo(centerX + 30, centerY);
+            canvas.drawPath(path1, paint);
+
+            Path path2 = new Path();
+            path2.moveTo(centerX, getHeight() - 20);
+            path2.lineTo(centerX - 30, centerY);
+            path2.lineTo(centerX + 30, centerY);
+            paint.setColor(Color.BLACK);
+            canvas.drawPath(path2, paint);
+        }
     }
 }

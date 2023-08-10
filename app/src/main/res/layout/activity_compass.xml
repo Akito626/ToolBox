@@ -19,7 +19,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:gravity="center"
-            android:textSize="25dp"/>
+            android:textSize="25sp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/degree_text"
@@ -27,23 +28,52 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:gravity="center"
-            android:textSize="25dp"/>
+            android:textSize="25sp"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/compass_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8">
+        android:layout_weight="0.8"
+        android:background="@drawable/circle">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff0000"
+            android:textSize="25sp"
+            android:text="N"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="10dp"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="S"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="E"
+            android:layout_gravity="center_vertical|left"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="W"
+            android:layout_gravity="center_vertical|right"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"/>
     </FrameLayout>
 
     <Space
