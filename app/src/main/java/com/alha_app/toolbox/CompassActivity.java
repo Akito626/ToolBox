@@ -127,14 +127,13 @@ public class CompassActivity extends AppCompatActivity {
         int index = (int) ((degree + 11.25) / 22.5);
         azimuthText.setText(directions[index]);
 
-        canvasView.setRotation(degree);
+        canvasView.setRotation(-degree);
     }
 
     private class CanvasView extends View{
         public CanvasView(Context context){
             super(context);
         }
-
         @Override
         protected void onDraw(Canvas canvas){
             Paint paint = new Paint();
