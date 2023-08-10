@@ -46,7 +46,10 @@ public class CompassActivity extends AppCompatActivity {
                 SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerValues, magnetometerValues);
                 SensorManager.getOrientation(rotationMatrix, orientationValues);
 
+                // -πからπ
                 float degree = (float) Math.toDegrees(orientationValues[0]);
+
+                // 360度表示に直す
                 if(degree < 0){
                     degree += 360;
                 }
@@ -89,9 +92,9 @@ public class CompassActivity extends AppCompatActivity {
 
         TextView azimuthText = findViewById(R.id.azimuth_text);
         TextView degreeText = findViewById(R.id.degree_text);
-        degreeText.setText(String.format("%.1f", degree) + "度");
+        degreeText.setText((int) degree + "度");
 
-        int index = (int) ((degree + 11.25) % 360 / 22.5);
+        int index = (int) ((degree + 11.25) / 22.5);
         azimuthText.setText(directions[index]);
     }
 }
