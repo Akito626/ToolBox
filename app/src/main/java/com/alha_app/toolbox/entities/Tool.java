@@ -3,6 +3,7 @@ package com.alha_app.toolbox.entities;
 public class Tool {
     private int id;
     private String name;
+    private String kana;
     private int image;
     private int count;
     private boolean isFavorite;
@@ -10,9 +11,10 @@ public class Tool {
     public Tool(){
     }
 
-    public Tool(int id, String name, int image){
+    public Tool(int id, String name, String kana, int image){
         this.id = id;
         this.name = name;
+        this.kana = kana;
         this.image = image;
     }
 
@@ -23,6 +25,11 @@ public class Tool {
     public String getName() {
         return name;
     }
+
+    public String getKana() {
+        return kana;
+    }
+
     public int getImage() {
         return image;
     }
@@ -37,6 +44,11 @@ public class Tool {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setKana(String kana) {
+        this.kana = kana;
+    }
+
     public void setImage(int image) {
         this.image = image;
     }

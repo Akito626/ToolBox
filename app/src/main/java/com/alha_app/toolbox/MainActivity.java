@@ -22,10 +22,13 @@ import com.alha_app.toolbox.database.ToolEntity;
 import com.alha_app.toolbox.entities.Tool;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler();
     private final Tool searchTool = new Tool();
+    private Comparator<Tool> japaneseComparator;
     private SimpleAdapter adapter;
     private List<Map<String, Object>> listData = new ArrayList<>();
 
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 初期化
         String[] toolNames = getResources().getStringArray(R.array.tools);
+        String[] toolsKana = getResources().getStringArray(R.array.tools_kana);
         isPushed = false;
         star = R.drawable.star;
 
@@ -58,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
                 R.drawable.ic_money, R.drawable.compass};
 
         for(int i = 0; i < toolNames.length; i++){
-            Tool tool = new Tool(i, toolNames[i], toolImages[i]);
+            Tool tool = new Tool(i, toolNames[i], toolsKana[i], toolImages[i]);
             tools.add(tool);
         }
 
         loadDB();
+
+        japaneseComparator = (t1, t2) -> {
+            Collator collator = Collator.getInstance(Locale.JAPANESE);
+            return collator.compare(t1.getKana(), t2.getKana());
+        };
     }
 
     @Override
@@ -275,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
                 tools.sort(Comparator.comparing(Tool::getId));
                 break;
             case 1:
-                tools.sort(Comparator.comparing(Tool::getName));
+                Collections.sort(tools, japaneseComparator);
                 break;
             case 2:
                 tools.sort(Comparator.comparing(Tool::getCount).reversed());

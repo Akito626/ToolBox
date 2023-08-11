@@ -38,6 +38,21 @@
         <item>通貨変換</item>
         <item>コンパス</item>
     </string-array>
+    
+    <string-array name="tools_kana">
+        <item>でんたく</item>
+        <item>かうんたー</item>
+        <item>すとっぷうぉっち</item>
+        <item>たいまー</item>
+        <item>とけい</item>
+        <item>きゅーあーるこーどりーだー</item>
+        <item>てんき</item>
+        <item>ほんやく</item>
+        <item>からーぴっかー</item>
+        <item>たんいへんかん</item>
+        <item>つうかへんかん</item>
+        <item>こんぱす</item>
+    </string-array>
 
     <string name="calc_0">0</string>
     <string name="calc_1">1</string>
