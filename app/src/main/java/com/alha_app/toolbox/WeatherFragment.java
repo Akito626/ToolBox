@@ -55,6 +55,7 @@ public class WeatherFragment extends Fragment {
         final Handler handler = new Handler();
 
         new Thread(() -> {
+            locationName = "東京都";
             getWeathers(new LatLng(35.6894, 139.6917));
 
             handler.post(() -> {
@@ -81,16 +82,8 @@ public class WeatherFragment extends Fragment {
         String urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
         String json = "";
         StringBuilder sb = new StringBuilder();
-        JsonNode jsonResult = null;
+        JsonNode jsonResult;
         ObjectMapper mapper = new ObjectMapper();
-
-//        if(str != null){
-//            System.out.println("場所");
-//            urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + str + "&appid=" + key + "&lang=ja&units=metric";
-//        } else {
-//            System.out.println("LatLng");
-//            urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLng.getLatitude() + "&lon=" + latLng.getLongitude() + "&appid=" + key + "&lang=ja&units=metric";
-//        }
 
         try {
             URL url = new URL(urlString);
@@ -103,12 +96,6 @@ public class WeatherFragment extends Fragment {
             }
             json = sb.toString();
             jsonResult = mapper.readTree(json);
-
-            // 名前を保存
-            locationName = jsonResult.get("city").get("name").toString().replace("\"", "");
-//            SharedPreferences preferences = getActivity().getSharedPreferences("weatherData", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.putString("locationName", locationName);
 
             for(int i = 0; i < jsonResult.get("list").size(); i++){
                 weatherData[i] = new WeatherData();
@@ -134,8 +121,6 @@ public class WeatherFragment extends Fragment {
 
         // 住所をセット
         TextView locationText = view.findViewById(R.id.location_name);
-        locationText.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-        locationText.setGravity(Gravity.CENTER);
         locationText.setText(locationName);
         ViewGroup.MarginLayoutParams locationParams = (ViewGroup.MarginLayoutParams) locationText.getLayoutParams();
         float margin = 10 * getContext().getResources().getDisplayMetrics().scaledDensity;  // sp -> px
@@ -225,7 +210,7 @@ public class WeatherFragment extends Fragment {
             minTmpText.setText(String.valueOf(weatherData[i].getTemp_min()));
 
             rainyText.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            rainyText.setText(weatherData[i].getPop() * 100 + "%");
+            rainyText.setText(String.format("%.2f", weatherData[i].getPop() * 100) + "%");
 
             humidityText.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             humidityText.setText(weatherData[i].getHumidity() + "%");
@@ -250,9 +235,9 @@ public class WeatherFragment extends Fragment {
         String urlString = "http://api.openweathermap.org/geo/1.0/direct?q=" + pName + "&limit=1&appid=" + key;
         String json = "";
         StringBuilder sb = new StringBuilder();
-        JsonNode jsonResult = null;
+        JsonNode jsonResult;
         ObjectMapper mapper = new ObjectMapper();
-        LatLng latLng = null;
+        LatLng latLng;
 
         try {
             URL url = new URL(urlString);
@@ -264,7 +249,9 @@ public class WeatherFragment extends Fragment {
                 sb.append(tmp);
             }
             json = sb.toString();
+            System.out.println(json);
             jsonResult = mapper.readTree(json);
+            locationName = jsonResult.get(0).get("local_names").get("ja").toString().replaceAll("\"", "");
             double latitude = jsonResult.get(0).get("lat").asDouble();
             double longitude = jsonResult.get(0).get("lon").asDouble();
             latLng = new LatLng(latitude, longitude);
