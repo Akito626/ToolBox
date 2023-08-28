@@ -79,7 +79,7 @@ public class WeatherActivity extends AppCompatActivity {
                     tab.setText("天気");
                     break;
                 case 1:
-                    tab.setText("雨雲レーダー");
+                    tab.setText("天気図");
             }
         }).attach();
 
